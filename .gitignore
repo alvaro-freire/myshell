@@ -7,5 +7,6 @@ hist_list.o
 mem_list.o
 prints.o
 auxiliars.o
+aux2.o
 p3
 shell3

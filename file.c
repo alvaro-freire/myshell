@@ -21,7 +21,8 @@
 #include <grp.h>
 #include "file.h"
 #include "prints.h"
-#include "auxiliars.h"
+#include "aux_file.h"
+#include "aux_mem.h"
 
 #define COMANDO 0
 #define PARAM 1

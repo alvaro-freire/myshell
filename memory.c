@@ -9,7 +9,7 @@
 
 #include "memory.h"
 #include "prints.h"
-#include "auxiliars.h"
+#include "aux_mem.h"
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/ipc.h>
