@@ -12,11 +12,10 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <asm-generic/errno.h>
+#include <sys/wait.h>
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/wait.h>
 
 #include "prints.h"
 #include "aux_mem.h"
