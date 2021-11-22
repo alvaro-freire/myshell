@@ -7,7 +7,7 @@
  * DATE: 22 / 11 / 2021
  */
 
-#ifndef P3_SO_PROCESS_H
-#define P3_SO_PROCESS_H
+#ifndef P3_SO_BG_LIST_H
+#define P3_SO_BG_LIST_H
 
-#endif //P3_SO_PROCESS_H
+#endif //P3_SO_BG_LIST_H
