@@ -10,4 +10,58 @@
 #ifndef P3_SO_BG_LIST_H
 #define P3_SO_BG_LIST_H
 
+#include <stdbool.h>
+
+#define LNULL NULL
+
+typedef struct fich {
+    int fd;
+    char *filename;
+} tFich;
+
+typedef enum cmd {
+    MALLOC, SHARED, MMAP
+} cmd;
+
+typedef struct tItemM {
+    cmd cmdType;
+    void *dir;
+    size_t size;
+    char date[128];
+    union {
+        int key;
+        tFich fich;
+    } Union;
+} tItemP;
+
+typedef struct tNodeP *tPosP;
+typedef struct tNodeP {
+    tItemP item;
+    tPosP next;
+} tNodeP;
+typedef tNodeP *tListP;
+
+
+void createEmptyListP(tListP *L);
+
+bool isEmptyListP(tListP L);
+
+tPosP firstP(tListP L);
+
+tPosP lastP(tListP L);
+
+tPosP previousP(tPosP p, tListP L);
+
+tPosP nextP(tPosP p, tListP L);
+
+tItemP getItemP(tPosP p, tListP L);
+
+tPosP findPosP(int n, tListP L);
+
+void deleteItemP(tPosP p, tListP *L);
+
+void deleteListP(tListP *L);
+
+bool insertItemP(tItemP i, tListP *L);
+
 #endif //P3_SO_BG_LIST_H

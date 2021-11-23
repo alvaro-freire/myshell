@@ -10,9 +10,6 @@
 #ifndef P2_SO_MEM_LIST_H
 #define P2_SO_MEM_LIST_H
 
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 #include <stdbool.h>
 
 #define LNULL NULL

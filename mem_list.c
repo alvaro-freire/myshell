@@ -7,8 +7,9 @@
  * DATE: 18 / 11 / 2021
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "mem_list.h"
-#include <string.h>
 
 void createEmptyListM(tListM *L) {
     *L = LNULL;

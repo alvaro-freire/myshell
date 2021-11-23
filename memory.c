@@ -7,15 +7,17 @@
  * DATE: 18 / 11 / 2021
  */
 
-#include "memory.h"
-#include "prints.h"
-#include "aux_mem.h"
 #include <string.h>
+#include <time.h>
 #include <sys/stat.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#include "memory.h"
+#include "prints.h"
+#include "aux_mem.h"
 
 /* Global variables */
 int global_int = 0;

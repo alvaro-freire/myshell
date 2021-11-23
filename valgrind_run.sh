@@ -1,7 +1,7 @@
 # Compiles the program
 make p3
 
-# Clears the terminal
+# Clean terminal
 clear
 
 # Runs main program with Valgrind
