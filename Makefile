@@ -1,5 +1,5 @@
-p3: Hist_list Mem_list File Prints Aux_File Aux_Mem Memory
-	gcc -Wall hist_list.o file.o prints.o memory.o mem_list.o aux_file.o aux_mem.o p3.c -o p3
+p3: Hist_list Mem_list File Prints Aux_File Aux_Mem Aux_Proc Memory
+	gcc -Wall hist_list.o file.o prints.o memory.o mem_list.o aux_file.o aux_mem.o aux_proc.o p3.c -o p3
 
 Hist_list:
 	gcc -Wall hist_list.c -c
@@ -22,5 +22,8 @@ Aux_File:
 Aux_Mem:
 	gcc -Wall aux_mem.c -c
 
+Aux_Proc:
+	gcc -Wall aux_proc.c -c
+
 clean:
-	rm Hist_List.o file.o mem_list.o prints.o memory.o aux_file.o aux_mem.o p3
+	rm Hist_List.o file.o mem_list.o prints.o memory.o aux_file.o aux_mem.o aux_proc.o p3

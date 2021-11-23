@@ -6,7 +6,8 @@ memory.o
 hist_list.o
 mem_list.o
 prints.o
-auxiliars.o
-aux2.o
+aux_file.o
+aux_mem.o
+aux_proc.o
 p3
 shell3
