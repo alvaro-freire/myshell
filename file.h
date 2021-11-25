@@ -15,7 +15,6 @@
 
 #include "hist_list.h"
 #include "mem_list.h"
-#include "memory.h"
 
 void cmdAutores(char *param, int n);
 

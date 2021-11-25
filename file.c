@@ -20,6 +20,8 @@
 #include <pwd.h>
 #include <grp.h>
 #include "file.h"
+#include "memory.h"
+#include "process.h"
 #include "prints.h"
 #include "aux_file.h"
 #include "aux_mem.h"
@@ -800,6 +802,10 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
 
     } else if (strcmp(trozos[COMANDO], "recursiva") == 0) {
         cmdRecursiva(trozos, n);
+
+    } else if (strcmp(trozos[COMANDO], "priority") == 0) {
+        cmdPriority(trozos, n);
+    } else  if (strcmp(trozos[COMANDO], "rederr") == 0) {
 
     } else {
         cmd_not_found();

@@ -10,4 +10,6 @@
 #ifndef P3_SO_PROCESS_H
 #define P3_SO_PROCESS_H
 
+void cmdPriority(char *trozos[], int n);
+
 #endif //P3_SO_PROCESS_H
