@@ -29,7 +29,7 @@
  * @return void.
  */
 void print_error() {
-    printf("Error: %s\n", strerror(errno));
+    perror("Error");
 }
 
 /**
