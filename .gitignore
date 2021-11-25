@@ -3,8 +3,10 @@ CMakeLists.txt
 /.idea
 file.o
 memory.o
+process.o
 hist_list.o
 mem_list.o
+bg_list.o
 prints.o
 aux_file.o
 aux_mem.o
