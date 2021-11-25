@@ -14,24 +14,8 @@
 
 #define LNULL NULL
 
-typedef struct fich {
-    int fd;
-    char *filename;
-} tFich;
-
-typedef enum cmd {
-    MALLOC, SHARED, MMAP
-} cmd;
-
-typedef struct tItemM {
-    cmd cmdType;
-    void *dir;
-    size_t size;
-    char date[128];
-    union {
-        int key;
-        tFich fich;
-    } Union;
+typedef struct tItemP {
+    pid_t pid;
 } tItemP;
 
 typedef struct tNodeP *tPosP;

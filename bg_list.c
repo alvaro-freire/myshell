@@ -53,11 +53,11 @@ tItemP getItemP(tPosP p, tListP L) {
     return p->item;
 }
 
-tPosP findPosP(int n, tListP L) {
+tPosP findPosP(pid_t pid, tListP L) {
     tPosP pos;
 
     for (pos = L; (pos != LNULL); pos = pos->next) {
-        if (getItemP(pos, L).size == n) {
+        if (getItemP(pos, L).pid == pid) {
             return pos;
         }
     }
