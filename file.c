@@ -287,6 +287,7 @@ void cmdCarpeta(char *param, int n) {
  */
 void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tListM *MemoryList) {
     int i;
+    char *command;
     tPosC pos;
     tItemC item;
 
@@ -302,7 +303,10 @@ void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tLi
             printf("* Number does not belong to any command *\n");
         } else {
             item = getItemC(pos, *CommandList);
-            procesarEntrada(item.CommandName, false, CommandList, commandNumber, MemoryList);
+            command = (char *) malloc(strlen(item.CommandName) + 1);
+            strcpy(command, item.CommandName);
+            procesarEntrada(command, false, CommandList, commandNumber, MemoryList);
+            free(command);
         }
     } else {
         cmd_not_found();
