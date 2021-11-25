@@ -12,4 +12,6 @@
 
 void cmdPriority(char *trozos[], int n);
 
+void cmdRederr(char *trozos[], int n);
+
 #endif //P3_SO_PROCESS_H

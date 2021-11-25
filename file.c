@@ -806,7 +806,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "priority") == 0) {
         cmdPriority(trozos, n);
     } else  if (strcmp(trozos[COMANDO], "rederr") == 0) {
-
+        cmdRederr(trozos, n);
     } else {
         cmd_not_found();
     }

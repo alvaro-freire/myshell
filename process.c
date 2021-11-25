@@ -9,9 +9,11 @@
 
 #include "process.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <sys/resource.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
 #include "prints.h"
 
@@ -29,7 +31,7 @@ void cmdPriority(char *trozos[], int n) {
         printf("Priority of the current process (pid: %d): %d\n", pid, priority);
     } else if (n == 2) {
         if ((pid = (pid_t) atoi(trozos[1])) == 0) {
-            printf("* Argument \"%s\" invalid *\n", trozos[1]);
+            invalid_arg();
             return;
         }
         if ((priority = getpriority(PRIO_PROCESS, pid)) == -1 && errno != 0) {
@@ -39,7 +41,7 @@ void cmdPriority(char *trozos[], int n) {
         printf("Priority of process with pid %d: %d\n", pid, priority);
     } else if (n == 3) {
         if ((pid = (pid_t) atoi(trozos[1])) == 0) {
-            printf("* Argument \"%s\" invalid *\n", trozos[1]);
+            invalid_arg();
             return;
         }
         value = atoi(trozos[2]);
@@ -48,5 +50,36 @@ void cmdPriority(char *trozos[], int n) {
             return;
         }
         printf("Priority of process with pid %d changed to %d\n", pid, value);
+    } else {
+        cmd_not_found();
+    }
+}
+
+void cmdRederr(char *trozos[], int n) {
+    int fd;
+
+    if (n == 1) {
+        printf("Standard error file descriptor: %d\n", STDERR_FILENO);
+    } else if (n == 2) {
+        if (strcmp(trozos[1], "-reset") == 0) {
+            /* ========================= { DUDA } ========================= */
+            if (dup2(1, STDERR_FILENO) == -1) {
+                printf("It was not possible to reset standard error\n");
+                return;
+            }
+            printf("Standard error was reset successfully\n");
+        } else {
+            if ((fd = open(trozos[1], O_WRONLY | O_CREAT | O_TRUNC)) == -1) {
+                print_error();
+                return;
+            }
+            if (dup2(fd, STDERR_FILENO) == -1) {
+                print_error();
+                return;
+            }
+            printf("Standard error was changed to file \"%s\"\n", trozos[1]);
+        }
+    } else {
+        invalid_nargs();
     }
 }
