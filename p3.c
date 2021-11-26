@@ -63,7 +63,7 @@ void guardarComando(tListC *L, char *command, int *commandNumber) {
     insertItemC(item, L);
 }
 
-int main() {
+int main(int argc, char *argv[], char *env[]) {
     int commandNumber = 1; /* se inicializa el contador de comandos */
     char command[MAX_CHARS]; /* se declara un array de chars de tamaño MAX_CHARS */
     tListC CommandList; /* se declara una lista para guardar los comandos */
@@ -86,7 +86,7 @@ int main() {
         guardarComando(&CommandList, command, &commandNumber);
         /* procedimiento encargado de procesar correctamente
          * cada comando (incluido en la librería "commands.h") */
-        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList);
+        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, env);
     }
 
     return 0;

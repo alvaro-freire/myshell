@@ -17,6 +17,21 @@
 #include <errno.h>
 #include "prints.h"
 
+extern char **environ;
+
+void cmdEntorno(char *trozos[], int n, char *env[]) {
+
+    if (n == 1) {
+        print_env_var(env);
+    } else if (n == 2 && strcmp(trozos[1], "-environ") == 0) {
+        print_env_var(environ);
+    } else if (n == 2 && strcmp(trozos[1], "-addr") == 0) {
+        print_env_addr(env, environ);
+    } else {
+        cmd_not_found();
+    }
+}
+
 void cmdPriority(char *trozos[], int n) {
     int priority, value;
     pid_t pid;

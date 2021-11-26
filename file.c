@@ -287,7 +287,7 @@ void cmdCarpeta(char *param, int n) {
  * @param commandNumber number of commands the history has
  * @return void.
  */
-void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tListM *MemoryList) {
+void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]) {
     int i;
     char *command;
     tPosC pos;
@@ -307,7 +307,7 @@ void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tLi
             item = getItemC(pos, *CommandList);
             command = (char *) malloc(strlen(item.CommandName) + 1);
             strcpy(command, item.CommandName);
-            procesarEntrada(command, false, CommandList, commandNumber, MemoryList);
+            procesarEntrada(command, false, CommandList, commandNumber, MemoryList, env);
             free(command);
         }
     } else {
@@ -720,7 +720,7 @@ void cmdPid(char *param, int n) {
  * @param commandNumber number of commands of the history
  * @return void.
  */
-void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList) {
+void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]) {
     /*
      * Se comprueba de qué comando se trata y se
      * llama al procedimiento correspondiente
@@ -742,7 +742,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdHist(trozos[PARAM], n, CommandList, commandNumber);
 
     } else if (strcmp(trozos[COMANDO], "comando") == 0) {
-        cmdComando(trozos[PARAM], n, CommandList, commandNumber, MemoryList);
+        cmdComando(trozos[PARAM], n, CommandList, commandNumber, MemoryList, env);
 
     } else if (strcmp(trozos[COMANDO], "infosis") == 0) {
         cmdInfosis(n);
@@ -805,8 +805,13 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
 
     } else if (strcmp(trozos[COMANDO], "priority") == 0) {
         cmdPriority(trozos, n);
-    } else  if (strcmp(trozos[COMANDO], "rederr") == 0) {
+
+    } else if (strcmp(trozos[COMANDO], "rederr") == 0) {
         cmdRederr(trozos, n);
+
+    } else if (strcmp(trozos[COMANDO], "entorno") == 0) {
+        cmdEntorno(trozos, n, env);
+
     } else {
         cmd_not_found();
     }
@@ -824,7 +829,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
  * @param commandNumber number of commands of the history
  * @return void.
  */
-void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList) {
+void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]) {
     char *trozos[MAX_ARGS];
     int n;
 
@@ -841,6 +846,6 @@ void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *comman
         *commandNumber = *commandNumber - 1;
 
     } else {
-        cmdSwitcher(trozos, n, exit, CommandList, commandNumber, MemoryList);
+        cmdSwitcher(trozos, n, exit, CommandList, commandNumber, MemoryList, env);
     }
 }

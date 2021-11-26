@@ -42,4 +42,8 @@ void print_memoryList(tListM L);
 
 void print_shared(tListM L);
 
+void print_env_var(char *env[]);
+
+void print_env_addr(char *env[], char *environ[]);
+
 #endif

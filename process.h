@@ -10,6 +10,8 @@
 #ifndef P3_SO_PROCESS_H
 #define P3_SO_PROCESS_H
 
+void cmdEntorno(char *trozos[], int n, char *env[]);
+
 void cmdPriority(char *trozos[], int n);
 
 void cmdRederr(char *trozos[], int n);

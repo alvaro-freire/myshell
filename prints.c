@@ -330,3 +330,16 @@ void print_mem(char *p, int bytes) {
         }
     }
 }
+
+void print_env_var(char *env[]) {
+    int i;
+
+    for (i = 0; env[i] != NULL; i++) {
+        printf("* String: %s | String address: %p | Pointer to string address: %p\n", env[i], env[i], &env[i]);
+    }
+}
+
+void print_env_addr(char *env[], char *environ[]) {
+    printf("env -> Value: %p | Address: %p\n", env, &env);
+    printf("environ -> Value: %p | Address: %p\n", environ, &environ);
+}

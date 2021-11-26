@@ -26,7 +26,7 @@ void cmdBorrarrec(char *trozos[], int n);
 
 void cmdCarpeta(char *param, int n);
 
-void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tListM *MemoryList);
+void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]);
 
 void cmdCrear(char *trozos[], int n);
 
@@ -44,8 +44,8 @@ void cmdListfich(char *trozos[], int n, bool aux_function);
 
 void cmdPid(char *param, int n);
 
-void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList);
+void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]);
 
-void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList);
+void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber, tListM *MemoryList, char *env[]);
 
 #endif
