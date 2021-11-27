@@ -16,17 +16,38 @@
 #include <fcntl.h>
 #include <errno.h>
 #include "prints.h"
+#include "aux_proc.h"
 
-extern char **environ;
-
-void cmdEntorno(char *trozos[], int n, char *env[]) {
+void cmdEntorno(char *trozos[], int n, char *env[], char *environ[]) {
 
     if (n == 1) {
-        print_env_var(env);
+        print_arg3_var(env);
     } else if (n == 2 && strcmp(trozos[1], "-environ") == 0) {
         print_env_var(environ);
     } else if (n == 2 && strcmp(trozos[1], "-addr") == 0) {
         print_env_addr(env, environ);
+    } else {
+        cmd_not_found();
+    }
+}
+
+void cmdMostrarvar(char *trozos[], int n, char *env[], char *environ[]) {
+    int i, j;
+    char *value;
+
+    if (n == 1) {
+        print_arg3_var(env);
+    } else if (n == 2) {
+        value = getenv(trozos[1]);
+        if (value == NULL) {
+            printf("Variable \"%s\" does not exists\n", trozos[1]);
+            return;
+        }
+        i = find_index(trozos[1], env);
+        j = find_index(trozos[1], environ);
+        printf("With arg3 main:\t%s (%p) %p\n", env[i], env[i], &env[i]);
+        printf("With environ:\t%s (%p) %p\n", environ[j], environ[j], &environ[j]);
+        printf("With getenv:\t%s (%p)\n", value, &value);
     } else {
         cmd_not_found();
     }

@@ -8,3 +8,22 @@
  */
 
 #include "aux_proc.h"
+#include <string.h>
+#include <stdlib.h>
+
+int find_index(char *param, char *trozos[]) {
+    int i;
+    char *aux, *cpy;
+
+    for (i = 0; trozos[i] != NULL; i++) {
+        cpy = (char *) malloc(strlen(trozos[i]) + 1);
+        strcpy(cpy, trozos[i]);
+        aux = strtok(cpy, "=");
+        if (strcmp(aux, param) == 0) {
+            free(cpy);
+            return i;
+        }
+        free(cpy);
+    }
+    return -1;
+}

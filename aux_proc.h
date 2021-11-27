@@ -10,4 +10,6 @@
 #ifndef P3_SO_AUX_PROC_H
 #define P3_SO_AUX_PROC_H
 
+int find_index(char *param, char *trozos[]);
+
 #endif //P3_SO_AUX_PROC_H

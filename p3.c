@@ -14,6 +14,8 @@
 #include "mem_list.h"
 #include "file.h"
 
+extern char **environ;
+
 /**
  * Function: prompt
  * ----------------------
@@ -86,7 +88,7 @@ int main(int argc, char *argv[], char *env[]) {
         guardarComando(&CommandList, command, &commandNumber);
         /* procedimiento encargado de procesar correctamente
          * cada comando (incluido en la librería "commands.h") */
-        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, env);
+        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, env, environ);
     }
 
     return 0;

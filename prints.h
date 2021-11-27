@@ -44,6 +44,8 @@ void print_shared(tListM L);
 
 void print_env_var(char *env[]);
 
+void print_arg3_var(char *env[]);
+
 void print_env_addr(char *env[], char *environ[]);
 
 #endif
