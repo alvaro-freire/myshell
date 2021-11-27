@@ -13,3 +13,4 @@ aux_mem.o
 aux_proc.o
 p3
 shell3
+log.txt
