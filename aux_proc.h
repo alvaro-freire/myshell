@@ -10,6 +10,10 @@
 #ifndef P3_SO_AUX_PROC_H
 #define P3_SO_AUX_PROC_H
 
+#include "env_list.h"
+
 int find_index(char *param, char *trozos[]);
+
+void liberarEnvironment(tListE *EnvironmentList);
 
 #endif //P3_SO_AUX_PROC_H

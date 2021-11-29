@@ -10,9 +10,13 @@
 #ifndef P3_SO_PROCESS_H
 #define P3_SO_PROCESS_H
 
-void cmdEntorno(char *trozos[], int n, char *env[], char *environ[]);
+#include "env_list.h"
 
-void cmdMostrarvar(char *trozos[], int n, char *env[], char *environ[]);
+void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList);
+
+void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]);
+
+void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);
 
 void cmdPriority(char *trozos[], int n);
 

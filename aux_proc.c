@@ -27,3 +27,11 @@ int find_index(char *param, char *trozos[]) {
     }
     return -1;
 }
+
+void liberarEnvironment(tListE *EnvironmentList) {
+    tPosE pos;
+
+    for (pos = firstE(*EnvironmentList); pos != LNULL; pos = nextE(pos, *EnvironmentList)) {
+        free(getItemE(pos, *EnvironmentList).name);
+    }
+}

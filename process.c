@@ -18,12 +18,66 @@
 #include "prints.h"
 #include "aux_proc.h"
 
-void cmdEntorno(char *trozos[], int n, char *env[], char *environ[]) {
+void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList) {
+    int i;
+    char *var;
+    tItemE item;
+
+    if (n == 4) {
+        /* se reserva memoria para encadenar los strings
+         * correspondientes con el formato "name=value" */
+        var = malloc(strlen(trozos[2]) + strlen(trozos[3]) + 4);
+        strcpy(var, trozos[2]);
+        strcat(var, "=");
+        strcat(var, trozos[3]);
+        /* se comprueba el modo en el que se va a acceder a la variable de entorno */
+        if (strcmp(trozos[1], "-a") == 0) {
+            /* se busca la variable en el array arg3 del main */
+            if ((i = find_index(trozos[2], arg3)) == -1) {
+                printf("Environment variable \"%s\" does not exist\n", trozos[2]);
+                free(var);
+                return;
+            }
+            /* se hace que el puntero de la variable correspondiente
+             * apunte al string con el nuevo valor */
+            arg3[i] = var;
+        } else if (strcmp(trozos[1], "-e") == 0) {
+            /* se busca la variable en el array environ del main */
+            if ((i = find_index(trozos[2], environ)) == -1) {
+                printf("Environment variable \"%s\" does not exist\n", trozos[2]);
+                free(var);
+                return;
+            }
+            /* se hace que el puntero de la variable correspondiente
+             * apunte al string con el nuevo valor */
+            environ[i] = var;
+        } else if (strcmp(trozos[1], "-p") == 0) {
+            /* si la variable existe se cambia su valor, si no existe se crea */
+            if (putenv(var) != 0) {
+                print_error();
+                free(var);
+                return;
+            }
+        } else {
+            cmd_not_found();
+            free(var);
+            return;
+        }
+        printf("Environment variable \"%s\" changed its value to \"%s\"\n", trozos[2], trozos[3]);
+        /* se añade la dirección del string a una lista para luego liberar su memoria reservada */
+        item.name = var;
+        insertItemE(item, EnvironmentList);
+    } else {
+        invalid_nargs();
+    }
+}
+
+void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]) {
 
     if (n == 1) {
         /* se imprime por pantalla el array del
          * tercer argumento del main (env) */
-        print_arg3_var(env);
+        print_arg3_var(arg3);
     } else if (n == 2 && strcmp(trozos[1], "-environ") == 0) {
         /* se imprime por pantalla el array de la
          * variable externa del main (environ) */
@@ -31,20 +85,20 @@ void cmdEntorno(char *trozos[], int n, char *env[], char *environ[]) {
     } else if (n == 2 && strcmp(trozos[1], "-addr") == 0) {
         /* se imprimen las direcciones de los dos
          * arrays mencionados anteriormente */
-        print_env_addr(env, environ);
+        print_env_addr(arg3, environ);
     } else {
         cmd_not_found();
     }
 }
 
-void cmdMostrarvar(char *trozos[], int n, char *env[], char *environ[]) {
+void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]) {
     int i, j;
     char *value;
 
     if (n == 1) {
         /* se imprime por pantalla el array del
-         * tercer argumento del main (env) */
-        print_arg3_var(env);
+         * tercer argumento del main (arg3) */
+        print_arg3_var(arg3);
     } else if (n == 2) {
         /* se obtiene el valor de la variable de entorno "trozos[1]" */
         value = getenv(trozos[1]);
@@ -54,11 +108,11 @@ void cmdMostrarvar(char *trozos[], int n, char *env[], char *environ[]) {
         }
         /* se busca en los arrays (3er argumento del main y variable
          * externa) la variable de entorno mencionada en el comando */
-        i = find_index(trozos[1], env);
+        i = find_index(trozos[1], arg3);
         j = find_index(trozos[1], environ);
 
         /* se imprimen valores y direcciones correspondientes de cada array */
-        printf("With arg3 main:\t%s (%p) %p\n", env[i], env[i], &env[i]);
+        printf("With arg3 main:\t%s (%p) %p\n", arg3[i], arg3[i], &arg3[i]);
         printf("With environ:\t%s (%p) %p\n", environ[j], environ[j], &environ[j]);
         printf("With getenv:\t%s (%p)\n", value, &value);
     } else {
@@ -69,6 +123,8 @@ void cmdMostrarvar(char *trozos[], int n, char *env[], char *environ[]) {
 void cmdPriority(char *trozos[], int n) {
     int priority, value;
     pid_t pid;
+    /* se inicializa el errno a 0 para detectar
+     * posibles errores más adelante */
     errno = 0;
 
     if (n == 1) {
@@ -85,7 +141,8 @@ void cmdPriority(char *trozos[], int n) {
             invalid_arg();
             return;
         }
-        /* se intenta obtener la prioridad del proceso actual */
+        /* se intenta obtener la prioridad del proceso actual teniendo en
+         * cuenta que puede devolver -1 pero no haberse producido un error */
         if ((priority = getpriority(PRIO_PROCESS, pid)) == -1 && errno != 0) {
             print_error();
             return;

@@ -15,6 +15,7 @@
 
 #include "hist_list.h"
 #include "mem_list.h"
+#include "env_list.h"
 
 void cmdAutores(char *param, int n);
 
@@ -27,11 +28,11 @@ void cmdBorrarrec(char *trozos[], int n);
 void cmdCarpeta(char *param, int n);
 
 void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber,
-                tListM *MemoryList, char *env[], char *environ[]);
+                tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]);
 
 void cmdCrear(char *trozos[], int n);
 
-void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList);
+void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList);
 
 void cmdFecha(char *param, int n);
 
@@ -46,9 +47,9 @@ void cmdListfich(char *trozos[], int n, bool aux_function);
 void cmdPid(char *param, int n);
 
 void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber,
-                 tListM *MemoryList, char *env[], char *environ[]);
+                 tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]);
 
 void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber,
-                     tListM *MemoryList, char *env[], char *environ[]);
+                     tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]);
 
 #endif

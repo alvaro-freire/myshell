@@ -70,6 +70,7 @@ int main(int argc, char *argv[], char *env[]) {
     char command[MAX_CHARS]; /* se declara un array de chars de tamaño MAX_CHARS */
     tListC CommandList; /* se declara una lista para guardar los comandos */
     tListM MemoryList; /* se declara una lista para guardar los comandos */
+    tListE EnvironmentList; /* se declara una lista para guardar variables de entorno */
     bool exit = false; /* se inicializa una variable bool para saber cuando cerrar el programa */
 
     /* se crea una lista vacía para guardar
@@ -80,6 +81,10 @@ int main(int argc, char *argv[], char *env[]) {
      * los datos de memoria necesarios */
     createEmptyListM(&MemoryList);
 
+    /* se crea una lista vacía para guardar las direcciones
+     * de las variables de entorno modificadas */
+    createEmptyListE(&EnvironmentList);
+
     /* bucle del shell para introducir los
      * comandos hasta que se cierre el programa */
     while (!exit) {
@@ -88,7 +93,7 @@ int main(int argc, char *argv[], char *env[]) {
         guardarComando(&CommandList, command, &commandNumber);
         /* procedimiento encargado de procesar correctamente
          * cada comando (incluido en la librería "commands.h") */
-        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, env, environ);
+        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, &EnvironmentList, env, environ);
     }
 
     return 0;

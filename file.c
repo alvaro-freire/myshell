@@ -25,6 +25,7 @@
 #include "prints.h"
 #include "aux_file.h"
 #include "aux_mem.h"
+#include "aux_proc.h"
 
 #define COMANDO 0
 #define PARAM 1
@@ -288,7 +289,7 @@ void cmdCarpeta(char *param, int n) {
  * @return void.
  */
 void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber,
-                tListM *MemoryList, char *env[], char *environ[]) {
+                tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]) {
     int i;
     char *command;
     tPosC pos;
@@ -308,7 +309,7 @@ void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber,
             item = getItemC(pos, *CommandList);
             command = (char *) malloc(strlen(item.CommandName) + 1);
             strcpy(command, item.CommandName);
-            procesarEntrada(command, false, CommandList, commandNumber, MemoryList, env, environ);
+            procesarEntrada(command, false, CommandList, commandNumber, MemoryList, EnvironmentList, arg3, environ);
             free(command);
         }
     } else {
@@ -365,7 +366,7 @@ void cmdCrear(char *trozos[], int n) {
  * @param L pointer to the list of commands
  * @return void.
  */
-void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList) {
+void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList) {
     if (n == 1) {
         *exit = true;
 
@@ -376,8 +377,14 @@ void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList) {
         /* se libera la memoria sin liberar por el usuario */
         liberarMemoria(MemoryList);
 
+        /* se libera la memoria reservada para las variables de entorno */
+        liberarEnvironment(EnvironmentList);
+
         /* se elimina la lista definitivamente */
         deleteListC(CommandList);
+
+        /* se elimina la lista de variables de entorno */
+        deleteListE(EnvironmentList);
 
     } else {
         invalid_nargs();
@@ -722,7 +729,7 @@ void cmdPid(char *param, int n) {
  * @return void.
  */
 void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *commandNumber,
-                 tListM *MemoryList, char *env[], char *environ[]) {
+                 tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]) {
     /*
      * Se comprueba de qué comando se trata y se
      * llama al procedimiento correspondiente
@@ -744,7 +751,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdHist(trozos[PARAM], n, CommandList, commandNumber);
 
     } else if (strcmp(trozos[COMANDO], "comando") == 0) {
-        cmdComando(trozos[PARAM], n, CommandList, commandNumber, MemoryList, env, environ);
+        cmdComando(trozos[PARAM], n, CommandList, commandNumber, MemoryList, EnvironmentList, arg3, environ);
 
     } else if (strcmp(trozos[COMANDO], "infosis") == 0) {
         cmdInfosis(n);
@@ -755,7 +762,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "fin") == 0 ||
                strcmp(trozos[COMANDO], "salir") == 0 ||
                strcmp(trozos[COMANDO], "bye") == 0) {
-        cmdExit(n, exit, CommandList, MemoryList);
+        cmdExit(n, exit, CommandList, MemoryList, EnvironmentList);
 
     } else if (strcmp(trozos[COMANDO], "crear") == 0) {
         cmdCrear(trozos, n);
@@ -812,10 +819,13 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdRederr(trozos, n);
 
     } else if (strcmp(trozos[COMANDO], "entorno") == 0) {
-        cmdEntorno(trozos, n, env, environ);
+        cmdEntorno(trozos, n, arg3, environ);
 
     } else if (strcmp(trozos[COMANDO], "mostrarvar") == 0) {
-        cmdMostrarvar(trozos, n, env, environ);
+        cmdMostrarvar(trozos, n, arg3, environ);
+
+    } else if (strcmp(trozos[COMANDO], "cambiarvar") == 0) {
+        cmdCambiarvar(trozos, n, arg3, environ, EnvironmentList);
 
     } else {
         cmd_not_found();
@@ -835,7 +845,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
  * @return void.
  */
 void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *commandNumber,
-                     tListM *MemoryList, char *env[], char *environ[]) {
+                     tListM *MemoryList, tListE *EnvironmentList, char *arg3[], char *environ[]) {
     char *trozos[MAX_ARGS];
     int n;
 
@@ -852,6 +862,6 @@ void procesarEntrada(char *command, bool *exit, tListC *CommandList, int *comman
         *commandNumber = *commandNumber - 1;
 
     } else {
-        cmdSwitcher(trozos, n, exit, CommandList, commandNumber, MemoryList, env, environ);
+        cmdSwitcher(trozos, n, exit, CommandList, commandNumber, MemoryList, EnvironmentList, arg3, environ);
     }
 }
