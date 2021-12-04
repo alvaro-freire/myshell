@@ -265,3 +265,25 @@ void cmdEjec(char *trozos[], int n) {
         }
     }
 }
+
+void cmdEjecpri(char *trozos[], int n) {
+    int value;
+
+    if (n < 3) {
+        invalid_nargs();
+    } else {
+        /* se intenta convertir el argumento
+         * del valor de prioridad a número */
+        value = atoi(trozos[1]);
+        /* se cambia la prioridad del proceso con el pid introducido
+         * por comando al valor correspondiente */
+        if (setpriority(PRIO_PROCESS, 0, value) == -1) {
+            print_error();
+            return;
+        }
+        printf("Priority of process with pid %d changed to %d\n", getpid(), value);
+        if (execvp(trozos[2], &trozos[2]) == -1) {
+            print_error();
+        }
+    }
+}
