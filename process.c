@@ -18,7 +18,7 @@
 #include "prints.h"
 #include "aux_proc.h"
 
-void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList) {
+void cmdCambiarvar1(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList) {
     int i;
     char *var;
     tItemE item;
@@ -33,7 +33,7 @@ void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE 
         /* se comprueba el modo en el que se va a acceder a la variable de entorno */
         if (strcmp(trozos[1], "-a") == 0) {
             /* se busca la variable en el array arg3 del main */
-            if ((i = find_index(trozos[2], arg3)) == -1) {
+            if ((i = BuscarVariable(trozos[2], arg3)) == -1) {
                 printf("Environment variable \"%s\" does not exist\n", trozos[2]);
                 free(var);
                 return;
@@ -43,7 +43,7 @@ void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE 
             arg3[i] = var;
         } else if (strcmp(trozos[1], "-e") == 0) {
             /* se busca la variable en el array environ del main */
-            if ((i = find_index(trozos[2], environ)) == -1) {
+            if ((i = BuscarVariable(trozos[2], environ)) == -1) {
                 printf("Environment variable \"%s\" does not exist\n", trozos[2]);
                 free(var);
                 return;
@@ -108,8 +108,12 @@ void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]) {
         }
         /* se busca en los arrays (3er argumento del main y variable
          * externa) la variable de entorno mencionada en el comando */
-        i = find_index(trozos[1], arg3);
-        j = find_index(trozos[1], environ);
+        if ((i = BuscarVariable(trozos[1], arg3)) == -1) {
+            print_error();
+        }
+        if ((j = BuscarVariable(trozos[1], environ)) == -1) {
+            print_error();
+        }
 
         /* se imprimen valores y direcciones correspondientes de cada array */
         printf("With arg3 main:\t%s (%p) %p\n", arg3[i], arg3[i], &arg3[i]);

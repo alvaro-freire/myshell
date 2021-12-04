@@ -8,29 +8,15 @@
  */
 
 #include "aux_proc.h"
-#include "errno.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <unistd.h>
 #include <pwd.h>
 
-int find_index(char *param, char *trozos[]) {
-    int i;
-    char *aux, *cpy;
+#define MAXVAR 255
 
-    for (i = 0; trozos[i] != NULL; i++) {
-        cpy = (char *) malloc(strlen(trozos[i]) + 1);
-        strcpy(cpy, trozos[i]);
-        aux = strtok(cpy, "=");
-        if (strcmp(aux, param) == 0) {
-            free(cpy);
-            return i;
-        }
-        free(cpy);
-    }
-    return -1;
-}
 
 void liberarEnvironment(tListE *EnvironmentList) {
     tPosE pos;
@@ -38,6 +24,21 @@ void liberarEnvironment(tListE *EnvironmentList) {
     for (pos = firstE(*EnvironmentList); pos != LNULL; pos = nextE(pos, *EnvironmentList)) {
         free(getItemE(pos, *EnvironmentList).name);
     }
+}
+
+int BuscarVariable(char *var, char *e[]) {
+    int pos = 0;
+    char aux[MAXVAR];
+
+    strcpy(aux, var);
+    strcat(aux, "=");
+    while (e[pos] != NULL)
+        if (!strncmp(e[pos], aux, strlen(aux)))
+            return (pos);
+        else
+            pos++;
+    errno = ENOENT; /*no hay tal variable*/
+    return (-1);
 }
 
 char *NombreUsuario(uid_t uid) {
