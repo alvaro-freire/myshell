@@ -17,7 +17,6 @@
 
 #define MAXVAR 255
 
-
 void liberarEnvironment(tListE *EnvironmentList) {
     tPosE pos;
 
@@ -32,28 +31,36 @@ int BuscarVariable(char *var, char *e[]) {
 
     strcpy(aux, var);
     strcat(aux, "=");
-    while (e[pos] != NULL)
-        if (!strncmp(e[pos], aux, strlen(aux)))
+
+    while (e[pos] != NULL) {
+        if (!strncmp(e[pos], aux, strlen(aux))) {
             return (pos);
-        else
+        } else {
             pos++;
-    errno = ENOENT; /*no hay tal variable*/
+        }
+    }
+
+    errno = ENOENT; /* no hay tal variable */
     return (-1);
 }
 
 char *NombreUsuario(uid_t uid) {
     struct passwd *p;
 
-    if ((p = getpwuid(uid)) == NULL)
+    if ((p = getpwuid(uid)) == NULL) {
         return ("??????");
+    }
+
     return p->pw_name;
 }
 
 uid_t UidUsuario(char *nombre) {
     struct passwd *p;
 
-    if ((p = getpwnam(nombre)) == NULL)
+    if ((p = getpwnam(nombre)) == NULL) {
         return (uid_t) -1;
+    }
+
     return p->pw_uid;
 }
 
@@ -71,6 +78,8 @@ void CambiarUidLogin(char *login) {
         printf("Invalid login: %s\n", login);
         return;
     }
-    if (setuid(uid) == -1)
+
+    if (setuid(uid) == -1) {
         printf("Impossible to change credential: %s\n", strerror(errno));
+    }
 }

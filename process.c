@@ -7,7 +7,6 @@
  * DATE: 22 / 11 / 2021
  */
 
-#include "process.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,6 +15,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/wait.h>
+
+#include "process.h"
 #include "prints.h"
 #include "aux_proc.h"
 
@@ -25,7 +26,7 @@ void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE 
     tItemE item;
 
     if (n == 4) {
-        /* se reserva memoria para encadenar los strings
+        /* se reserva memoria para concatenar los strings
          * correspondientes con el formato "name=value" */
         var = malloc(strlen(trozos[2]) + strlen(trozos[3]) + 4);
         strcpy(var, trozos[2]);
