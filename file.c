@@ -832,6 +832,12 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "uid") == 0) {
         cmdUid(trozos, n);
 
+    } else if (strcmp(trozos[COMANDO], "fork") == 0) {
+        cmdFork(n);
+
+    } else if (strcmp(trozos[COMANDO], "ejec") == 0) {
+        cmdEjec(trozos, n);
+
     } else {
         cmd_not_found();
     }

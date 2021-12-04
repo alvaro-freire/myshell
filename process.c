@@ -15,10 +15,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include "prints.h"
 #include "aux_proc.h"
 
-void cmdCambiarvar1(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList) {
+void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList) {
     int i;
     char *var;
     tItemE item;
@@ -233,5 +234,34 @@ void cmdUid(char *trozos[], int n) {
         }
     } else {
         cmd_not_found();
+    }
+}
+
+void cmdFork(int n) {
+    pid_t pid;
+
+    if (n == 1) {
+        if ((pid = fork()) == -1) {
+            print_error();
+        } else if (pid == 0) {
+            // child process continue
+            printf("Running process: %d\n", getpid());
+        } else {
+            // parent process wait
+            waitpid(pid, NULL, 0);
+        }
+    } else {
+        invalid_nargs();
+    }
+}
+
+void cmdEjec(char *trozos[], int n) {
+
+    if (n == 1) {
+        invalid_nargs();
+    } else {
+        if (execvp(trozos[1], &trozos[1]) == -1) {
+            print_error();
+        }
     }
 }

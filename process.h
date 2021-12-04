@@ -14,7 +14,11 @@
 
 void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList);
 
+void cmdEjec(char *trozos[], int n);
+
 void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]);
+
+void cmdFork(int n);
 
 void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);
 
