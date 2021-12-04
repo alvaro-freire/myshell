@@ -838,6 +838,8 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "ejec") == 0) {
         cmdEjec(trozos, n);
 
+    } else if (strcmp(trozos[COMANDO], "ejecpri") == 0) {
+        cmdEjecpri(trozos, n);
     } else {
         cmd_not_found();
     }
