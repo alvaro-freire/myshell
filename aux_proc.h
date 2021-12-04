@@ -11,9 +11,19 @@
 #define P3_SO_AUX_PROC_H
 
 #include "env_list.h"
+#include <unistd.h>
+#include <pwd.h>
 
 int find_index(char *param, char *trozos[]);
 
 void liberarEnvironment(tListE *EnvironmentList);
+
+char *NombreUsuario (uid_t uid);
+
+uid_t UidUsuario (char *nombre);
+
+void MostrarUidsProceso (void);
+
+void CambiarUidLogin (char *login);
 
 #endif //P3_SO_AUX_PROC_H

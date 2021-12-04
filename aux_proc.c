@@ -8,8 +8,12 @@
  */
 
 #include "aux_proc.h"
+#include "errno.h"
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <pwd.h>
 
 int find_index(char *param, char *trozos[]) {
     int i;
@@ -34,4 +38,38 @@ void liberarEnvironment(tListE *EnvironmentList) {
     for (pos = firstE(*EnvironmentList); pos != LNULL; pos = nextE(pos, *EnvironmentList)) {
         free(getItemE(pos, *EnvironmentList).name);
     }
+}
+
+char *NombreUsuario(uid_t uid) {
+    struct passwd *p;
+
+    if ((p = getpwuid(uid)) == NULL)
+        return ("??????");
+    return p->pw_name;
+}
+
+uid_t UidUsuario(char *nombre) {
+    struct passwd *p;
+
+    if ((p = getpwnam(nombre)) == NULL)
+        return (uid_t) -1;
+    return p->pw_uid;
+}
+
+void MostrarUidsProceso(void) {
+    uid_t real = getuid(), efec = geteuid();
+
+    printf("Real credential: %d, (%s)\n", real, NombreUsuario(real));
+    printf("Effective credential: %d, (%s)\n", efec, NombreUsuario(efec));
+}
+
+void CambiarUidLogin(char *login) {
+    uid_t uid;
+
+    if ((uid = UidUsuario(login)) == (uid_t) -1) {
+        printf("Invalid login: %s\n", login);
+        return;
+    }
+    if (setuid(uid) == -1)
+        printf("Impossible to change credential: %s\n", strerror(errno));
 }

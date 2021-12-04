@@ -20,6 +20,8 @@ void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);
 
 void cmdPriority(char *trozos[], int n);
 
-void cmdRederr(char *trozos[], int n);
+void cmdRederr(char *trozos[], int n, char **std_error);
+
+void cmdUid(char *trozos[], int n);
 
 #endif //P3_SO_PROCESS_H

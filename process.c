@@ -77,11 +77,11 @@ void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]) {
     if (n == 1) {
         /* se imprime por pantalla el array del
          * tercer argumento del main (env) */
-        print_arg3_var(arg3);
+        print_var(arg3, "main arg3");
     } else if (n == 2 && strcmp(trozos[1], "-environ") == 0) {
         /* se imprime por pantalla el array de la
          * variable externa del main (environ) */
-        print_env_var(environ);
+        print_var(environ, "environ");
     } else if (n == 2 && strcmp(trozos[1], "-addr") == 0) {
         /* se imprimen las direcciones de los dos
          * arrays mencionados anteriormente */
@@ -98,7 +98,7 @@ void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]) {
     if (n == 1) {
         /* se imprime por pantalla el array del
          * tercer argumento del main (arg3) */
-        print_arg3_var(arg3);
+        print_var(arg3, "main arg3");
     } else if (n == 2) {
         /* se obtiene el valor de la variable de entorno "trozos[1]" */
         value = getenv(trozos[1]);
@@ -169,22 +169,22 @@ void cmdPriority(char *trozos[], int n) {
     }
 }
 
-void cmdRederr(char *trozos[], int n) {
+void cmdRederr(char *trozos[], int n, char **std_error) {
     int fd;
 
     if (n == 1) {
         /* se imprime el file descriptor en el que se encuentra
          * direccionada la salida estándar de errores */
-        printf("Standard error file descriptor: %d\n", STDERR_FILENO);
+        printf("Standard error in file \"%s\"\n", *std_error);
     } else if (n == 2) {
         if (strcmp(trozos[1], "-reset") == 0) {
-            /* ========================= { DUDA } ========================= */
             /* se restablece el fd de la salida estándar de errores al
              * valor predeterminado (salida por pantalla) */
-            if (dup2(1, STDERR_FILENO) == -1) {
+            if (dup2(STDOUT_FILENO, STDERR_FILENO) == -1) {
                 printf("It was not possible to reset standard error\n");
                 return;
             }
+            *std_error = "Initial setup";
             printf("Standard error was reset successfully\n");
         } else {
             /* se abre el archivo indicado en el comando y se guarda su fd */
@@ -197,9 +197,37 @@ void cmdRederr(char *trozos[], int n) {
                 print_error();
                 return;
             }
+            *std_error = "hola";
             printf("Standard error was changed to file \"%s\"\n", trozos[1]);
         }
     } else {
         invalid_nargs();
+    }
+}
+
+void cmdUid(char *trozos[], int n) {
+
+    if (n == 1) {
+        MostrarUidsProceso();
+    } else if (n == 2) {
+        if (strcmp(trozos[1], "-get") == 0 || strcmp(trozos[1], "-set") == 0) {
+            MostrarUidsProceso();
+        } else {
+            invalid_arg();
+        }
+    } else if (n == 3) {
+        if (strcmp(trozos[1], "-set") == 0) {
+            CambiarUidLogin(NombreUsuario(atoi(trozos[2])));
+        } else {
+            invalid_arg();
+        }
+    } else if (n == 4) {
+        if (strcmp(trozos[1], "-set") == 0 && strcmp(trozos[2], "-l") == 0) {
+            CambiarUidLogin(trozos[3]);
+        } else {
+            invalid_arg();
+        }
+    } else {
+        cmd_not_found();
     }
 }

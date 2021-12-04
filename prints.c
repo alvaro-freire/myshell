@@ -331,19 +331,11 @@ void print_mem(char *p, int bytes) {
     }
 }
 
-void print_arg3_var(char *env[]) {
+void print_var(char *env[], char *name) {
     int i;
 
     for (i = 0; env[i] != NULL; i++) {
-        printf("%p->main arg3[%d]=(%p) %s\n", &env[i], i, env[i], env[i]);
-    }
-}
-
-void print_env_var(char *env[]) {
-    int i;
-
-    for (i = 0; env[i] != NULL; i++) {
-        printf("%p->environ[%d]=(%p) %s\n", &env[i], i, env[i], env[i]);
+        printf("%p->%s[%d]=(%p) %s\n", &env[i], name, i, env[i], env[i]);
     }
 }
 

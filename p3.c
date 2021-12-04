@@ -68,6 +68,7 @@ void guardarComando(tListC *L, char *command, int *commandNumber) {
 int main(int argc, char *argv[], char *env[]) {
     int commandNumber = 1; /* se inicializa el contador de comandos */
     char command[MAX_CHARS]; /* se declara un array de chars de tamaño MAX_CHARS */
+    char *std_error = "Initial setup";
     tListC CommandList; /* se declara una lista para guardar los comandos */
     tListM MemoryList; /* se declara una lista para guardar los comandos */
     tListE EnvironmentList; /* se declara una lista para guardar variables de entorno */
@@ -93,7 +94,7 @@ int main(int argc, char *argv[], char *env[]) {
         guardarComando(&CommandList, command, &commandNumber);
         /* procedimiento encargado de procesar correctamente
          * cada comando (incluido en la librería "commands.h") */
-        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, &EnvironmentList, env, environ);
+        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, &EnvironmentList, env, environ, &std_error);
     }
 
     return 0;
