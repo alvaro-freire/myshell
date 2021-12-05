@@ -160,12 +160,7 @@ void cmdPriority(char *trozos[], int n) {
             invalid_arg();
             return;
         }
-        /* se intenta convertir el argumento
-         * del valor de prioridad a número */
-        value = atoi(trozos[2]);
-        /* se cambia la prioridad del proceso con el pid introducido
-         * por comando al valor correspondiente */
-        if (setpriority(PRIO_PROCESS, pid, value) == -1) {
+        if ((value = set_priority(trozos[2], pid)) == -1) {
             print_error();
             return;
         }
@@ -245,10 +240,10 @@ void cmdFork(int n) {
         if ((pid = fork()) == -1) {
             print_error();
         } else if (pid == 0) {
-            // child process continue
+            /* el proceso hijo continúa ejecutándose */
             printf("Running process: %d\n", getpid());
         } else {
-            // parent process wait
+            /* el proceso padre espera a que termine el hijo */
             waitpid(pid, NULL, 0);
         }
     } else {
@@ -273,18 +268,57 @@ void cmdEjecpri(char *trozos[], int n) {
     if (n < 3) {
         invalid_nargs();
     } else {
-        /* se intenta convertir el argumento
-         * del valor de prioridad a número */
-        value = atoi(trozos[1]);
-        /* se cambia la prioridad del proceso con el pid introducido
-         * por comando al valor correspondiente */
-        if (setpriority(PRIO_PROCESS, 0, value) == -1) {
+        if ((value = set_priority(trozos[1], 0)) == -1) {
             print_error();
             return;
         }
         printf("Priority of process with pid %d changed to %d\n", getpid(), value);
         if (execvp(trozos[2], &trozos[2]) == -1) {
             print_error();
+        }
+    }
+}
+
+void cmdFg(char *trozos[], int n) {
+    pid_t pid;
+
+    if (n == 1) {
+        invalid_nargs();
+    } else {
+        pid = fork();
+        if (pid == 0) {
+            /* se ejecuta el programa en el proceso hijo */
+            if (execvp(trozos[1], &trozos[1]) == -1) {
+                print_error();
+            }
+        } else {
+            /* el proceso padre espera a que termine la ejecución del proceso hijo */
+            waitpid(pid, NULL, 0);
+        }
+    }
+}
+
+void cmdFgpri(char *trozos[], int n) {
+    int value;
+    pid_t pid;
+
+    if (n < 3) {
+        invalid_nargs();
+    } else {
+        pid = fork();
+        if (pid == 0) {
+            if ((value = set_priority(trozos[1], 0)) == -1) {
+                print_error();
+                return;
+            }
+            printf("Priority of process with pid %d changed to %d\n", getpid(), value);
+            /* se ejecuta el programa en el proceso hijo */
+            if (execvp(trozos[2], &trozos[2]) == -1) {
+                print_error();
+            }
+        } else {
+            /* el proceso padre espera a que termine la ejecución del proceso hijo */
+            waitpid(pid, NULL, 0);
         }
     }
 }

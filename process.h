@@ -20,6 +20,10 @@ void cmdEjecpri(char *trozos[], int n);
 
 void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]);
 
+void cmdFg(char *trozos[], int n);
+
+void cmdFgpri(char *trozos[], int n);
+
 void cmdFork(int n);
 
 void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);

@@ -26,4 +26,6 @@ void CambiarUidLogin (char *login);
 
 int BuscarVariable(char *var, char *e[]);
 
+int set_priority(char *file, pid_t pid);
+
 #endif //P3_SO_AUX_PROC_H

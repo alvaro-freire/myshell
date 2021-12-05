@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <sys/resource.h>
 
 #define MAXVAR 255
 
@@ -82,4 +83,19 @@ void CambiarUidLogin(char *login) {
     if (setuid(uid) == -1) {
         printf("Impossible to change credential: %s\n", strerror(errno));
     }
+}
+
+int set_priority(char *file, pid_t pid) {
+    int value;
+
+    /* se intenta convertir el argumento
+     * del valor de prioridad a número */
+    value = atoi(file);
+    /* se cambia la prioridad del proceso con el pid introducido
+     * por comando al valor correspondiente */
+    if (setpriority(PRIO_PROCESS, pid, value) == -1) {
+        return -1;
+    }
+
+    return value;
 }
