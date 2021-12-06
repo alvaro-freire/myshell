@@ -153,7 +153,7 @@ void cmdPriority(char *trozos[], int n) {
             print_error();
             return;
         }
-        printf("Priority of process with pid %d: %d\n", pid, priority);
+        printf("Priority of process %d: %d\n", pid, priority);
     } else if (n == 3) {
         /* se intenta convertir el argumento del pid a número */
         if ((pid = (pid_t) atoi(trozos[1])) == 0) {
@@ -164,7 +164,7 @@ void cmdPriority(char *trozos[], int n) {
             print_error();
             return;
         }
-        printf("Priority of process with pid %d changed to %d\n", pid, value);
+        printf("Priority of process %d changed to %d\n", pid, value);
     } else {
         cmd_not_found();
     }
@@ -198,7 +198,8 @@ void cmdRederr(char *trozos[], int n, char **std_error) {
                 print_error();
                 return;
             }
-            *std_error = "hola";
+
+            strcpy(*std_error, trozos[1]);
             printf("Standard error was changed to file \"%s\"\n", trozos[1]);
         }
     } else {
