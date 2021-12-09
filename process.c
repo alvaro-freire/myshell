@@ -583,8 +583,19 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
             return;
         }
 
-        if (findPosP(pid, *ProcessList) != LNULL) {
+        pos = findPosP(pid, *ProcessList);
+
+        if (pos != LNULL) {
             waitpid(pid, NULL, 0);
+            item = getItemP(pos, *ProcessList);
+            update_status(item);
+            updateItem(item, pos, ProcessList);
+
+            if (pos->item.end == 1) {
+                deleteItemP(pos, ProcessList);
+            }
+
+            print_job(item);
         }
     } else {
         invalid_nargs();
