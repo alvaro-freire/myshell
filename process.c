@@ -344,7 +344,8 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
     pid_t pid;
     tItemP item;
     time_t tiempo;
-    char date[128];
+    char date[128], *login;
+    uid_t uid;
 
     if (n == 1) {
         invalid_nargs();
@@ -373,9 +374,11 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
         item.end = 0;
         item.state = RUNNING;
 
+        uid = geteuid();
+        login = NombreUsuario(uid);
         /* nombre del usuario ejecutando el proceso */
-        item.user = malloc(strlen(trozos[1]) + 1);
-        strcpy(item.user, trozos[1]);
+        item.user = malloc(strlen(login) + 1);
+        strcpy(item.user, login);
 
         /* se reserva la memoria necesaria para guardar el comando */
         item.command = malloc(strlen(trozos[1]) + 2);
@@ -394,9 +397,10 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
 void cmdBackpri(char *trozos[], int n, tListP *ProcessList) {
     int i;
     pid_t pid;
+    uid_t uid;
     tItemP item;
     time_t tiempo;
-    char date[128];
+    char date[128], *login;
 
     if (n < 3) {
         invalid_nargs();
@@ -429,9 +433,11 @@ void cmdBackpri(char *trozos[], int n, tListP *ProcessList) {
         item.end = 0;
         item.state = RUNNING;
 
+        uid = geteuid();
+        login = NombreUsuario(uid);
         /* nombre del usuario ejecutando el proceso */
-        item.user = malloc(strlen(trozos[1]) + 1);
-        strcpy(item.user, trozos[1]);
+        item.user = malloc(strlen(login) + 1);
+        strcpy(item.user, login);
 
         /* se reserva la memoria necesaria para guardar el comando */
         item.command = malloc(strlen(trozos[2]) + 2);
@@ -597,6 +603,64 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
 
             print_job(item);
         }
+    } else {
+        invalid_nargs();
+    }
+}
+
+void cmdJob2(char *trozos[], int n, tListP *ProcessList) {
+    int status;
+    pid_t pid;
+    tPosP pos;
+    tItemP item;
+
+    if (n == 1) {
+        cmdListjobs(1, ProcessList);
+    } else if (n == 2) {
+        pid = atoi(trozos[1]);
+        if ((pos = findPosP(pid, *ProcessList)) == LNULL) {
+            cmdListjobs(1, ProcessList);
+        } else {
+            item = getItemP(pos, *ProcessList);
+            item = update_status(item);
+            updateItem(item, pos, ProcessList);
+            print_job(item);
+        }
+    } else if (n == 3) {
+        pid = atoi(trozos[2]);
+        if (strcmp(trozos[1], "-fg") != 0) {
+            invalid_arg();
+            return;
+        }
+
+        if ((pos = findPosP(pid, *ProcessList)) == LNULL) {
+            printf("Process %d there is not in background processes list\n", pid);
+            return;
+        }
+        item = getItemP(pos, *ProcessList);
+        /* el proceso se pasa a foreground */
+        if (waitpid(pid, &status, 0) == pid) {
+            /* el estado del proceso ha cambiado desde la última revisión */
+            if (WIFEXITED(status)) {
+                item.state = EXITED;
+                item.end = WEXITSTATUS(status);
+            } else if (WIFCONTINUED(status)) {
+                item.state = RUNNING;
+            } else if (WIFSTOPPED(status)) {
+                item.state = STOPPED;
+                item.end = WSTOPSIG(status);
+            } else if (WIFSIGNALED(status)) {
+                item.state = KILLED;
+                item.end = WTERMSIG(status);
+            } else {
+                item.state = UNKNOWN;
+            }
+        }
+        print_end(item);
+        free(item.command);
+        free(item.time);
+        free(item.user);
+        deleteItemP(pos, ProcessList);
     } else {
         invalid_nargs();
     }

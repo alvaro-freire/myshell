@@ -364,3 +364,23 @@ void print_job(tItemP item) {
 void empty_list() {
     printf("Error: empty list.\n");
 }
+
+void print_end(tItemP item) {
+
+    switch (item.state) {
+        case EXITED:
+            printf("Process %d was exited with %d\n", item.pid, item.end);
+            break;
+        case RUNNING:
+            printf("Process %d is running\n", item.pid);
+            break;
+        case STOPPED:
+            printf("Process %d was stopped with signal %d (%s)\n", item.pid, item.end, NombreSenal(item.end));
+            break;
+        case KILLED:
+            printf("Process %d was killed with signal %d (%s)\n", item.pid, item.end, NombreSenal(item.end));
+            break;
+        default:
+            printf("Process %d' state ", item.pid);
+    }
+}

@@ -14,11 +14,6 @@
 #include <sys/types.h>
 
 #define LNULL NULL
-#define EXITED 0
-#define RUNNING 1
-#define STOPPED -1
-#define KILLED -2
-#define UNKNOWN -3
 
 typedef struct tItemP {
     pid_t pid;

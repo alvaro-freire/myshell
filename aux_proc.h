@@ -15,6 +15,12 @@
 #include <unistd.h>
 #include <pwd.h>
 
+#define EXITED 0
+#define RUNNING 1
+#define STOPPED -1
+#define KILLED -2
+#define UNKNOWN -3
+
 void liberarEnvironment(tListE EnvironmentList);
 
 void liberarProcessCommand(tListP ProcessList);

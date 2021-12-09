@@ -51,4 +51,6 @@ void print_job(tItemP item);
 
 void empty_list();
 
+void print_end(tItemP item);
+
 #endif
