@@ -19,6 +19,12 @@
 
 #include "prints.h"
 
+#define NOCHANGE -1
+#define SIGN 1
+#define NORM 2
+#define CONT 3
+#define STOP 4
+
 #define MAXVAR 255
 
 void liberarEnvironment(tListE EnvironmentList) {
@@ -116,21 +122,22 @@ void liberarProcessCommand(tListP ProcessList) {
     }
 }
 
-char *check_status(int status) {
+int check_status(int pid) {
+    int status;
+    int npid = waitpid(pid, &status, WNOHANG | WUNTRACED | WCONTINUED);
 
-    switch (status) {
-        case EXITED:
-            return "EXITED";
-        case RUNNING:
-            return "RUNNING";
-        case STOPPED:
-            return "STOPPED";
-        case KILLED:
-            return "KILLED";
-        default:
-            return "UNKNOWN";
+    if (npid == pid) {
+        if (WIFSIGNALED(status))
+            return SIGN;
+        if (WIFEXITED(status))
+            return NORM;
+        if (WIFCONTINUED(status))
+            return CONT;
+        if (WIFSTOPPED(status))
+            return STOP;
     }
 
+    return NOCHANGE;
 }
 
 tItemP update_status(tItemP item) {
@@ -155,4 +162,23 @@ tItemP update_status(tItemP item) {
     }
 
     return item;
+}
+
+void checkoptions_borrar(char *trozos[], int n, bool *opTerm, bool *opSig, bool *opAll, bool *opClear) {
+
+    /* se identifican las opciones escogidas por el
+     * usuario para los seis primeros parámetros: */
+    for (int i = 1; i < n; i++) {
+        if (trozos[i] == NULL) {
+            break;
+        } else if (strcmp(trozos[i], "-term") == 0) {
+            *opTerm = true;
+        } else if (strcmp(trozos[i], "-sig") == 0) {
+            *opSig = true;
+        } else if (strcmp(trozos[i], "-all") == 0) {
+            *opAll = true;
+        } else if (strcmp(trozos[i], "-clear") == 0) {
+            *opClear = true;
+        }
+    }
 }

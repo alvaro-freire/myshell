@@ -31,8 +31,10 @@ int CambiarUidLogin (char *login);
 
 int BuscarVariable(char *var, char *e[]);
 
-char *check_status(int status);
+int check_status(int pid);
 
 tItemP update_status(tItemP item);
+
+void checkoptions_borrar(char *trozos[], int n, bool *opTerm, bool *opSig, bool *opAll, bool *opClear);
 
 #endif //P3_SO_AUX_PROC_H
