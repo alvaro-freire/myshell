@@ -362,7 +362,7 @@ void print_job(tItemP item) {
 }
 
 void empty_list() {
-    printf("Error: empty list.\n");
+    printf("Error: empty list\n");
 }
 
 void print_end(tItemP item) {

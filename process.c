@@ -612,7 +612,7 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
 void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
     int nOptions;
     bool opTerm = false, opSig = false, opAll = false, opClear = false;
-    tPosP pos;
+    tPosP pos, aux;
     tItemP item;
 
     checkoptions_borrar(trozos, n, &opTerm, &opSig, &opAll, &opClear);
@@ -629,49 +629,37 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
         return;
     }
 
+    if (opClear) {
+        liberarProcessCommand(*ProcessList);
+        clearListP(ProcessList);
+        printf("List is now empty\n");
+        return;
+    }
+
     if (opAll) {
         opTerm = true;
         opSig = true;
     }
 
-    pos = *ProcessList;
-
-    if (opTerm) {
-        while (pos != NULL) {
-            item = getItemP(pos, *ProcessList);
-
-            item = update_status(item, 1);
-            updateItem(item, pos, ProcessList);
-
-            if (pos->item.end == 2) {
+    for (pos = firstP(*ProcessList); pos != LNULL; pos = aux) {
+        aux = nextP(pos, *ProcessList);
+        item = getItemP(pos, *ProcessList);
+        item = update_status(item, 2);
+        if (opTerm) {
+            if (item.state == EXITED) {
+                free(item.command);
+                free(item.time);
+                free(item.user);
                 deleteItemP(pos, ProcessList);
             }
-
-            pos = pos->next;
         }
-    }
-
-    if (opSig) {
-        while (pos != NULL) {
-            item = getItemP(pos, *ProcessList);
-
-            item = update_status(item, 1);
-            updateItem(item, pos, ProcessList);
-
-            if (pos->item.end == 1) {
+        if (opSig) {
+            if (item.state == KILLED) {
+                free(item.command);
+                free(item.time);
+                free(item.user);
                 deleteItemP(pos, ProcessList);
             }
-
-            pos = pos->next;
         }
     }
-
-    if (opClear) {
-        if (isEmptyListP(*ProcessList)) {
-            empty_list();
-        } else {
-            clearListP(ProcessList);
-        }
-    }
-
 }
