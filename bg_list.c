@@ -64,6 +64,17 @@ tPosP findPosP(pid_t pid, tListP L) {
     return pos;
 }
 
+bool findItemP(pid_t pid, tListP L) {
+    tPosP pos;
+
+    for (pos = L; (pos != LNULL); pos = pos->next) {
+        if (getItemP(pos, L).pid == pid) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void updateItem(tItemP item, tPosP pos, tListP *L) {
     pos->item = item;
 }

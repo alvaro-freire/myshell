@@ -505,3 +505,34 @@ void cmdListjobs(int n, tListP *ProcessList) {
         print_job(item);
     }
 }
+
+void cmdJob(char *trozos[], int n, tListP *ProcessList) {
+    pid_t pid;
+    tPosP pos;
+    tItemP item;
+
+    if (n == 1) {
+        cmdListjobs(1, ProcessList);
+    } else if (n == 2) {
+        pid = atoi(trozos[1]);
+        if (strcmp(trozos[1], "-fg") == 0 || !findItemP(pid, *ProcessList)) {
+            cmdListjobs(1, ProcessList);
+        } else {
+            pos = findPosP(pid, *ProcessList);
+            item = getItemP(pos, *ProcessList);
+            print_job(item);
+        }
+    } else if (n == 3) {
+        pid = atoi(trozos[2]);
+        if (strcmp(trozos[1], "-fg") != 0) {
+            invalid_arg();
+            return;
+        }
+
+        if (findItemP(pid, *ProcessList)) {
+            waitpid(pid, NULL, 0);
+        }
+    } else {
+        invalid_nargs();
+    }
+}

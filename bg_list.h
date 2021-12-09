@@ -51,7 +51,9 @@ tPosP nextP(tPosP p, tListP L);
 
 tItemP getItemP(tPosP p, tListP L);
 
-tPosP findPosP(int n, tListP L);
+tPosP findPosP(pid_t pid, tListP L);
+
+bool findItemP(int n, tListP L);
 
 void updateItem(tItemP i, tPosP p, tListP *L);
 
