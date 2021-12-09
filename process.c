@@ -187,8 +187,13 @@ void cmdRederr(char *trozos[], int n, char **std_error) {
                 printf("It was not possible to reset standard error\n");
                 return;
             }
-            *std_error = "Initial setup";
-            printf("Standard error was reset successfully\n");
+            if (strcmp(*std_error, "Initial setup") != 0) {
+                *std_error = realloc(*std_error, 14);
+                strcpy(*std_error, "Initial setup");
+                printf("Standard error was reset successfully\n");
+            } else {
+                printf("Standard error was already with initial setup\n");
+            }
         } else {
             /* se abre el archivo indicado en el comando y se guarda su fd */
             if ((fd = open(trozos[1], O_WRONLY | O_CREAT | O_TRUNC)) == -1) {
@@ -200,7 +205,7 @@ void cmdRederr(char *trozos[], int n, char **std_error) {
                 print_error();
                 return;
             }
-
+            *std_error = realloc(*std_error, strlen(trozos[1]) + 1);
             strcpy(*std_error, trozos[1]);
             printf("Standard error was changed to file \"%s\"\n", trozos[1]);
         }

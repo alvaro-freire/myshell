@@ -367,7 +367,8 @@ void cmdCrear(char *trozos[], int n) {
  * @param L pointer to the list of commands
  * @return void.
  */
-void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList, tListP *ProcessList) {
+void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList,
+             tListP *ProcessList, char **std_error) {
     if (n == 1) {
         *exit = true;
 
@@ -383,6 +384,8 @@ void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE 
 
         /* se libera la memoria reservada para los comandos de los procesos en background */
         liberarProcessCommand(*ProcessList);
+
+        free(*std_error);
 
         /* se elimina la lista definitivamente */
         deleteListC(CommandList);
@@ -770,7 +773,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "fin") == 0 ||
                strcmp(trozos[COMANDO], "salir") == 0 ||
                strcmp(trozos[COMANDO], "bye") == 0) {
-        cmdExit(n, exit, CommandList, MemoryList, EnvironmentList, ProcessList);
+        cmdExit(n, exit, CommandList, MemoryList, EnvironmentList, ProcessList, std_error);
 
     } else if (strcmp(trozos[COMANDO], "crear") == 0) {
         cmdCrear(trozos, n);

@@ -33,7 +33,8 @@ void cmdComando(char *param, int n, tListC *CommandList, int *commandNumber, tLi
 
 void cmdCrear(char *trozos[], int n);
 
-void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList, tListP *ProcessList);
+void cmdExit(int n, bool *exit, tListC *CommandList, tListM *MemoryList, tListE *EnvironmentList, tListP *ProcessList,
+             char **std_error);
 
 void cmdFecha(char *param, int n);
 

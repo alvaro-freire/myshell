@@ -70,12 +70,15 @@ void guardarComando(tListC *L, char *command, int *commandNumber) {
 int main(int argc, char *argv[], char *env[]) {
     int commandNumber = 1; /* se inicializa el contador de comandos */
     char command[MAX_CHARS]; /* se declara un array de chars de tamaño MAX_CHARS */
-    char *std_error = "Initial setup";
+    char *std_error;
     tListC CommandList; /* se declara una lista para guardar los comandos */
     tListM MemoryList; /* se declara una lista para guardar los comandos */
     tListE EnvironmentList; /* se declara una lista para guardar variables de entorno */
     tListP ProcessList; /* se declara una lista para guardar los procesos en background */
     bool exit = false; /* se inicializa una variable bool para saber cuando cerrar el programa */
+
+    std_error = malloc(14);
+    strcpy(std_error, "Initial setup");
 
     /* se crea una lista vacía para guardar
      * los comandos en orden de entrada */
