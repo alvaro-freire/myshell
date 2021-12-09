@@ -13,11 +13,12 @@
 #include <time.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <errno.h>
 #include <dirent.h>
+#include <pwd.h>
 
 #include "aux_file.h"
 #include "aux_mem.h"
+#include "aux_proc.h"
 #include "prints.h"
 
 /**

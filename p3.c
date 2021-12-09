@@ -10,8 +10,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+
 #include "hist_list.h"
 #include "mem_list.h"
+#include "bg_list.h"
 #include "file.h"
 
 extern char **environ;
@@ -72,6 +74,7 @@ int main(int argc, char *argv[], char *env[]) {
     tListC CommandList; /* se declara una lista para guardar los comandos */
     tListM MemoryList; /* se declara una lista para guardar los comandos */
     tListE EnvironmentList; /* se declara una lista para guardar variables de entorno */
+    tListP ProcessList; /* se declara una lista para guardar los procesos en background */
     bool exit = false; /* se inicializa una variable bool para saber cuando cerrar el programa */
 
     /* se crea una lista vacía para guardar
@@ -86,6 +89,10 @@ int main(int argc, char *argv[], char *env[]) {
      * de las variables de entorno modificadas */
     createEmptyListE(&EnvironmentList);
 
+    /* se crea una lista vacía para guardar los procesos
+     * que se fueron creando en background */
+    createEmptyListP(&ProcessList);
+
     /* bucle del shell para introducir los
      * comandos hasta que se cierre el programa */
     while (!exit) {
@@ -94,7 +101,8 @@ int main(int argc, char *argv[], char *env[]) {
         guardarComando(&CommandList, command, &commandNumber);
         /* procedimiento encargado de procesar correctamente
          * cada comando (incluido en la librería "commands.h") */
-        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList, &EnvironmentList, env, environ, &std_error);
+        procesarEntrada(command, &exit, &CommandList, &commandNumber, &MemoryList,
+                        &EnvironmentList, env, environ, &std_error, &ProcessList);
     }
 
     return 0;

@@ -10,11 +10,16 @@
 #ifndef P3_SO_AUX_PROC_H
 #define P3_SO_AUX_PROC_H
 
+#include "bg_list.h"
 #include "env_list.h"
 #include <unistd.h>
 #include <pwd.h>
 
-void liberarEnvironment(tListE *EnvironmentList);
+void liberarEnvironment(tListE EnvironmentList);
+
+void liberarProcessCommand(tListP ProcessList);
+
+int set_priority(char *file, pid_t pid);
 
 char *NombreUsuario (uid_t uid);
 
@@ -22,10 +27,12 @@ uid_t UidUsuario (char *nombre);
 
 void MostrarUidsProceso (void);
 
-void CambiarUidLogin (char *login);
+int CambiarUidLogin (char *login);
 
 int BuscarVariable(char *var, char *e[]);
 
-int set_priority(char *file, pid_t pid);
+char *check_status(int status);
+
+tItemP update_status(tItemP item);
 
 #endif //P3_SO_AUX_PROC_H

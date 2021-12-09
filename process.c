@@ -15,6 +15,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #include "process.h"
 #include "prints.h"
@@ -208,6 +209,8 @@ void cmdRederr(char *trozos[], int n, char **std_error) {
 }
 
 void cmdUid(char *trozos[], int n) {
+    uid_t uid;
+    char *login;
 
     if (n == 1) {
         MostrarUidsProceso();
@@ -219,13 +222,20 @@ void cmdUid(char *trozos[], int n) {
         }
     } else if (n == 3) {
         if (strcmp(trozos[1], "-set") == 0) {
-            CambiarUidLogin(NombreUsuario(atoi(trozos[2])));
+            uid = atoi(trozos[2]);
+            login = NombreUsuario(uid);
+            if (CambiarUidLogin(login) == 0) {
+                printf("Uid changed to: %d (%s)\n", uid, login);
+            }
         } else {
             invalid_arg();
         }
     } else if (n == 4) {
         if (strcmp(trozos[1], "-set") == 0 && strcmp(trozos[2], "-l") == 0) {
-            CambiarUidLogin(trozos[3]);
+            uid = UidUsuario(trozos[3]);
+            if (CambiarUidLogin(trozos[3]) == 0) {
+                printf("Uid changed to: %d (%s)\n", uid, trozos[3]);
+            }
         } else {
             invalid_arg();
         }
@@ -286,7 +296,9 @@ void cmdFg(char *trozos[], int n) {
     if (n == 1) {
         invalid_nargs();
     } else {
-        pid = fork();
+        if ((pid = fork()) == -1) {
+            print_error();
+        }
         if (pid == 0) {
             /* se ejecuta el programa en el proceso hijo */
             if (execvp(trozos[1], &trozos[1]) == -1) {
@@ -306,7 +318,9 @@ void cmdFgpri(char *trozos[], int n) {
     if (n < 3) {
         invalid_nargs();
     } else {
-        pid = fork();
+        if ((pid = fork()) == -1) {
+            print_error();
+        }
         if (pid == 0) {
             if ((value = set_priority(trozos[1], 0)) == -1) {
                 print_error();
@@ -321,5 +335,116 @@ void cmdFgpri(char *trozos[], int n) {
             /* el proceso padre espera a que termine la ejecución del proceso hijo */
             waitpid(pid, NULL, 0);
         }
+    }
+}
+
+void cmdBack(char *trozos[], int n, tListP *ProcessList) {
+    int i;
+    pid_t pid;
+    tItemP item;
+    time_t tiempo;
+    char date[128];
+    uid_t uid;
+
+    if (n == 1) {
+        invalid_nargs();
+    } else {
+        if ((pid = fork()) == -1) {
+            print_error();
+        }
+        if (pid == 0) {
+            /* se ejecuta el programa en el proceso hijo */
+            if (execvp(trozos[1], &trozos[1]) == -1) {
+                print_error();
+                return;
+            }
+        } else {
+            /* el proceso padre continúa ejecutándose paralelamente al proceso hijo */
+        }
+        tiempo = time(0);
+        strftime(date, 128, "%d/%m/%y %H:%M:%S", localtime(&tiempo));
+
+        item.pid = pid;
+        item.time = date;
+        item.end = 0;
+        item.state = RUNNING;
+
+        /* nombre del usuario ejecutando el proceso */
+        uid = geteuid();
+        item.user = NombreUsuario(uid);
+
+        /* se reserva la memoria necesaria para guardar el comando */
+        item.command = malloc(strlen(trozos[1]) + 2);
+        strcpy(item.command, trozos[1]);
+        strcat(item.command, " ");
+        for (i = 2; i < n; i++) {
+            item.command = realloc(item.command, strlen(item.command) + strlen(trozos[i]) + 2);
+            strcat(item.command, trozos[i]);
+            strcat(item.command, " ");
+        }
+
+        insertItemP(item, ProcessList);
+    }
+}
+
+void cmdEjecas(char *trozos[], int n) {
+    uid_t uid;
+
+    if (n < 3) {
+        invalid_nargs();
+    } else {
+        uid = UidUsuario(trozos[1]);
+        if (CambiarUidLogin(trozos[1]) == 0) {
+            printf("Uid changed to: %d (%s)\n", uid, trozos[1]);
+            if (execvp(trozos[2], &trozos[2]) == -1) {
+                print_error();
+            }
+        }
+    }
+}
+
+void cmdFgas(char *trozos[], int n) {
+    uid_t uid;
+    pid_t pid;
+
+    if (n < 3) {
+        invalid_nargs();
+    } else {
+        pid = fork();
+        if (pid == 0) {
+            /* proceso hijo */
+            uid = UidUsuario(trozos[1]);
+            if (CambiarUidLogin(trozos[1]) == -1) {
+                /* error al cambiar el usuario */
+                return;
+            }
+            printf("Uid changed to: %d (%s)\n", uid, trozos[1]);
+            if (execvp(trozos[2], &trozos[2]) == -1) {
+                print_error();
+            }
+        } else {
+            /* proceso padre */
+            waitpid(pid, NULL, 0);
+        }
+    }
+}
+
+void cmdListjobs(int n, tListP *ProcessList) {
+    char *status;
+    tPosP pos;
+    tItemP item;
+
+    if (n != 1) {
+        invalid_nargs();
+        return;
+    }
+
+    for (pos = firstP(*ProcessList); pos != LNULL; pos = nextP(pos, *ProcessList)) {
+        item = getItemP(pos, *ProcessList);
+        item = update_status(item);
+        status = check_status(item.state);
+        updateItem(item, pos, ProcessList);
+        printf("%d\t%s p=%d %s %s (%d) %s\n", item.pid, item.user, item.end, item.time,
+               status, getpriority(PRIO_PROCESS, item.pid), item.command);
     }
 }

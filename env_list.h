@@ -1,10 +1,3 @@
-//
-// Created by mateo on 29/11/2021.
-//
-
-#ifndef P3_SO_ENV_LIST_H
-#define P3_SO_ENV_LIST_H
-
 /**
  * TITLE: Operative Systems
  * SUBTITLE: Lab Assignment 3
@@ -14,8 +7,8 @@
  * DATE: 22 / 11 / 2021
  */
 
-#ifndef P3_SO_BG_LIST_H
-#define P3_SO_BG_LIST_H
+#ifndef P3_SO_ENV_LIST_H
+#define P3_SO_ENV_LIST_H
 
 #include <stdbool.h>
 
@@ -54,7 +47,5 @@ void deleteItemE(tPosE p, tListE *L);
 void deleteListE(tListE *L);
 
 bool insertItemE(tItemE i, tListE *L);
-
-#endif //P3_SO_BG_LIST_H
 
 #endif //P3_SO_ENV_LIST_H

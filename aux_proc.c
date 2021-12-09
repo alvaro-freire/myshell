@@ -15,14 +15,17 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/resource.h>
+#include <sys/wait.h>
+
+#include "prints.h"
 
 #define MAXVAR 255
 
-void liberarEnvironment(tListE *EnvironmentList) {
+void liberarEnvironment(tListE EnvironmentList) {
     tPosE pos;
 
-    for (pos = firstE(*EnvironmentList); pos != LNULL; pos = nextE(pos, *EnvironmentList)) {
-        free(getItemE(pos, *EnvironmentList).name);
+    for (pos = firstE(EnvironmentList); pos != LNULL; pos = nextE(pos, EnvironmentList)) {
+        free(getItemE(pos, EnvironmentList).name);
     }
 }
 
@@ -68,21 +71,23 @@ uid_t UidUsuario(char *nombre) {
 void MostrarUidsProceso(void) {
     uid_t real = getuid(), efec = geteuid();
 
-    printf("Real credential: %d, (%s)\n", real, NombreUsuario(real));
-    printf("Effective credential: %d, (%s)\n", efec, NombreUsuario(efec));
+    printf("Real credential: %d (%s)\n", real, NombreUsuario(real));
+    printf("Effective credential: %d (%s)\n", efec, NombreUsuario(efec));
 }
 
-void CambiarUidLogin(char *login) {
+int CambiarUidLogin(char *login) {
     uid_t uid;
 
     if ((uid = UidUsuario(login)) == (uid_t) -1) {
         printf("Invalid login: %s\n", login);
-        return;
+        return -1;
     }
 
     if (setuid(uid) == -1) {
-        printf("Impossible to change credential: %s\n", strerror(errno));
+        print_error();
+        return -1;
     }
+    return 0;
 }
 
 int set_priority(char *file, pid_t pid) {
@@ -98,4 +103,53 @@ int set_priority(char *file, pid_t pid) {
     }
 
     return value;
+}
+
+void liberarProcessCommand(tListP ProcessList) {
+    tPosP pos;
+
+    for (pos = firstP(ProcessList); pos != LNULL; pos = nextP(pos, ProcessList)) {
+        free(getItemP(pos, ProcessList).command);
+    }
+}
+
+char *check_status(int status) {
+
+    switch (status) {
+        case EXITED:
+            return "EXITED";
+        case RUNNING:
+            return "RUNNING";
+        case STOPPED:
+            return "STOPPED";
+        case KILLED:
+            return "KILLED";
+        default:
+            return "UNKNOWN";
+    }
+
+}
+
+tItemP update_status(tItemP item) {
+    int status;
+
+    if (waitpid(item.pid, &status, WNOHANG | WUNTRACED | WCONTINUED) == item.pid) {
+        /* el estado del proceso ha cambiado desde la última revisión */
+        if (WIFEXITED(status)) {
+            item.state = EXITED;
+            item.end = WEXITSTATUS(status);
+        } else if (WIFCONTINUED(status)) {
+            item.state = RUNNING;
+        } else if (WIFSTOPPED(status)) {
+            item.state = STOPPED;
+            item.end = WSTOPSIG(status);
+        } else if (WIFSIGNALED(status)) {
+            item.state = KILLED;
+            item.end = WTERMSIG(status);
+        } else {
+            item.state = UNKNOWN;
+        }
+    }
+
+    return item;
 }

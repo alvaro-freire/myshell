@@ -10,11 +10,16 @@
 #ifndef P3_SO_PROCESS_H
 #define P3_SO_PROCESS_H
 
+#include "bg_list.h"
 #include "env_list.h"
+
+void cmdBack(char *trozos[], int n, tListP *ProcessList);
 
 void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList);
 
 void cmdEjec(char *trozos[], int n);
+
+void cmdEjecas(char *trozos[], int n);
 
 void cmdEjecpri(char *trozos[], int n);
 
@@ -22,9 +27,13 @@ void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]);
 
 void cmdFg(char *trozos[], int n);
 
+void cmdFgas(char *trozos[], int n);
+
 void cmdFgpri(char *trozos[], int n);
 
 void cmdFork(int n);
+
+void cmdListjobs(int n, tListP *ProcessList);
 
 void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);
 
