@@ -365,7 +365,10 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
         strftime(date, 128, "%d/%m/%y %H:%M:%S", localtime(&tiempo));
 
         item.pid = pid;
-        item.time = date;
+
+        item.time = malloc(strlen(date) + 1);
+        strcpy(item.time, date);
+
         item.end = 0;
         item.state = RUNNING;
 

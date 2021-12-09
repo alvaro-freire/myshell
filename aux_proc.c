@@ -107,9 +107,12 @@ int set_priority(char *file, pid_t pid) {
 
 void liberarProcessCommand(tListP ProcessList) {
     tPosP pos;
+    tItemP item;
 
     for (pos = firstP(ProcessList); pos != LNULL; pos = nextP(pos, ProcessList)) {
-        free(getItemP(pos, ProcessList).command);
+        item = getItemP(pos, ProcessList);
+        free(item.command);
+        free(item.time);
     }
 }
 
