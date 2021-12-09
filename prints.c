@@ -15,11 +15,13 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <pwd.h>
+#include <sys/resource.h>
 
 #include "aux_file.h"
 #include "aux_mem.h"
 #include "aux_proc.h"
 #include "prints.h"
+#include "signals.h"
 
 /**
  * Function: print_error
@@ -343,4 +345,19 @@ void print_var(char *env[], char *name) {
 void print_env_addr(char *env[], char *environ[]) {
     printf("main arg3: %p (stored in %p)\n", env, &env);
     printf("environ: %p (stored in %p)\n", environ, &environ);
+}
+
+void print_job(tItemP item) {
+    char *status, *signal;
+
+    status = check_status(item.state);
+
+    if (item.state == STOPPED || item.state == KILLED) {
+        signal = NombreSenal(item.end);
+        printf("%d\t%s p=%d %s %s (%s) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
+               status, signal, item.command);
+    } else {
+        printf("%d\t%s p=%d %s %s (%d) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
+               status, item.end, item.command);
+    }
 }

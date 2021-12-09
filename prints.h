@@ -11,6 +11,7 @@
 #define P1_SO_PRINTS_H
 
 #include "mem_list.h"
+#include "bg_list.h"
 
 void print_error();
 
@@ -45,5 +46,7 @@ void print_shared(tListM L);
 void print_var(char *env[], char *name);
 
 void print_env_addr(char *env[], char *environ[]);
+
+void print_job(tItemP item);
 
 #endif

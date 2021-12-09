@@ -433,7 +433,6 @@ void cmdFgas(char *trozos[], int n) {
 }
 
 void cmdListjobs(int n, tListP *ProcessList) {
-    char *status;
     tPosP pos;
     tItemP item;
 
@@ -445,9 +444,7 @@ void cmdListjobs(int n, tListP *ProcessList) {
     for (pos = firstP(*ProcessList); pos != LNULL; pos = nextP(pos, *ProcessList)) {
         item = getItemP(pos, *ProcessList);
         item = update_status(item);
-        status = check_status(item.state);
         updateItem(item, pos, ProcessList);
-        printf("%d\t%s p=%d %s %s (%d) %s\n", item.pid, item.user, item.end, item.time,
-               status, getpriority(PRIO_PROCESS, item.pid), item.command);
+        print_job(item);
     }
 }
