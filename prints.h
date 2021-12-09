@@ -49,4 +49,6 @@ void print_env_addr(char *env[], char *environ[]);
 
 void print_job(tItemP item);
 
+void empty_list();
+
 #endif

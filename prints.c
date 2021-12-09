@@ -14,7 +14,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <pwd.h>
 #include <sys/resource.h>
 
 #include "aux_file.h"
@@ -360,4 +359,8 @@ void print_job(tItemP item) {
         printf("%d\t%s p=%d %s %s (%d) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
                status, item.end, item.command);
     }
+}
+
+void empty_list() {
+    printf("Error: empty list.\n");
 }
