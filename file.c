@@ -857,7 +857,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdBack(trozos, n, ProcessList);
 
     } else if (strcmp(trozos[COMANDO], "backpri") == 0) {
-        // cmdBackpri();
+        cmdBackpri(trozos, n, ProcessList);
 
     } else if (strcmp(trozos[COMANDO], "ejecas") == 0) {
         cmdEjecas(trozos, n);

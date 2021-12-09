@@ -390,6 +390,63 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
     }
 }
 
+void cmdBackpri(char *trozos[], int n, tListP *ProcessList) {
+    int i, value;
+    pid_t pid;
+    tItemP item;
+    time_t tiempo;
+    char date[128];
+    uid_t uid;
+
+    if (n < 3) {
+        invalid_nargs();
+    } else {
+        if ((pid = fork()) == -1) {
+            print_error();
+        }
+        if (pid == 0) {
+            if ((value = set_priority(trozos[1], 0)) == -1) {
+                print_error();
+                return;
+            }
+            printf("Priority of process with pid %d changed to %d\n", getpid(), value);
+            /* se ejecuta el programa en el proceso hijo */
+            if (execvp(trozos[2], &trozos[2]) == -1) {
+                print_error();
+                return;
+            }
+        } else {
+            /* el proceso padre continúa ejecutándose paralelamente al proceso hijo */
+        }
+        tiempo = time(0);
+        strftime(date, 128, "%d/%m/%y %H:%M:%S", localtime(&tiempo));
+
+        item.pid = pid;
+
+        item.time = malloc(strlen(date) + 1);
+        strcpy(item.time, date);
+
+        item.end = 0;
+        item.state = RUNNING;
+
+        /* nombre del usuario ejecutando el proceso */
+        uid = geteuid();
+        item.user = NombreUsuario(uid);
+
+        /* se reserva la memoria necesaria para guardar el comando */
+        item.command = malloc(strlen(trozos[2]) + 2);
+        strcpy(item.command, trozos[2]);
+        strcat(item.command, " ");
+        for (i = 3; i < n; i++) {
+            item.command = realloc(item.command, strlen(item.command) + strlen(trozos[i]) + 2);
+            strcat(item.command, trozos[i]);
+            strcat(item.command, " ");
+        }
+
+        insertItemP(item, ProcessList);
+    }
+}
+
 void cmdEjecas(char *trozos[], int n) {
     uid_t uid;
 
