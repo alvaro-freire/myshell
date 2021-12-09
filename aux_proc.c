@@ -96,12 +96,12 @@ int CambiarUidLogin(char *login) {
     return 0;
 }
 
-int set_priority(char *file, pid_t pid) {
+int set_priority(char *val, pid_t pid) {
     int value;
 
     /* se intenta convertir el argumento
      * del valor de prioridad a número */
-    value = atoi(file);
+    value = atoi(val);
     /* se cambia la prioridad del proceso con el pid introducido
      * por comando al valor correspondiente */
     if (setpriority(PRIO_PROCESS, pid, value) == -1) {
@@ -119,6 +119,7 @@ void liberarProcessCommand(tListP ProcessList) {
         item = getItemP(pos, ProcessList);
         free(item.command);
         free(item.time);
+        free(item.user);
     }
 }
 

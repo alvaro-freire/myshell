@@ -19,7 +19,7 @@ void liberarEnvironment(tListE EnvironmentList);
 
 void liberarProcessCommand(tListP ProcessList);
 
-int set_priority(char *file, pid_t pid);
+int set_priority(char *val, pid_t pid);
 
 char *NombreUsuario (uid_t uid);
 

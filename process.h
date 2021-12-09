@@ -17,6 +17,8 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList);
 
 void cmdBackpri(char *trozos[], int n, tListP *ProcessList);
 
+void cmdBgas(char *trozos[], int n, tListP *ProcessList);
+
 void cmdCambiarvar(char *trozos[], int n, char *arg3[], char *environ[], tListE *EnvironmentList);
 
 void cmdEjec(char *trozos[], int n);

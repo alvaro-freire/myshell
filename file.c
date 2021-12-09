@@ -866,7 +866,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdFgas(trozos, n);
 
     } else if (strcmp(trozos[COMANDO], "bgas") == 0) {
-        // cmdBgas();
+        cmdBgas(trozos, n, ProcessList);
 
     } else if (strcmp(trozos[COMANDO], "listjobs") == 0) {
         cmdListjobs(n, ProcessList);
