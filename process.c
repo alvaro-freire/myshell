@@ -536,3 +536,70 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
         invalid_nargs();
     }
 }
+
+void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
+    int nOptions;
+    bool opTerm = false, opSig = false, opAll = false, opClear = false;
+    tPosP pos;
+    int newstatus;
+
+    checkoptions_borrar(trozos, n, &opTerm, &opSig, &opAll, &opClear);
+
+    nOptions = opTerm + opSig + opAll + opClear;
+
+    if (isEmptyListP(*ProcessList)) {
+        empty_list();
+        return;
+    }
+
+    if (n != nOptions + 1) {
+        invalid_nargs();
+        return;
+    }
+
+    if (opAll) {
+        opTerm = true;
+        opSig = true;
+    }
+
+    if (opTerm) {
+        while (pos != NULL) {
+            newstatus = check_status(pos->item.pid);
+
+            if (newstatus != -1) {
+                pos->item.end = newstatus;
+            }
+
+            if (pos->item.end == 2) {
+                deleteItemP(pos, ProcessList);
+            }
+
+            pos = pos->next;
+        }
+    }
+
+    if (opSig) {
+        while (pos != NULL) {
+            newstatus = check_status(pos->item.pid);
+
+            if (newstatus != -1) {
+                pos->item.end = newstatus;
+            }
+
+            if (pos->item.end == 1) {
+                deleteItemP(pos, ProcessList);
+            }
+
+            pos = pos->next;
+        }
+    }
+
+    if (opClear) {
+        if (isEmptyListP(*ProcessList)) {
+            empty_list();
+        } else {
+            clearListP(ProcessList);
+        }
+    }
+
+}

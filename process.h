@@ -39,6 +39,8 @@ void cmdListjobs(int n, tListP *ProcessList);
 
 void cmdJob(char *trozos[], int n, tListP *ProcessList);
 
+void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList);
+
 void cmdMostrarvar(char *trozos[], int n, char *arg3[], char *environ[]);
 
 void cmdPriority(char *trozos[], int n);

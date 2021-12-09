@@ -874,6 +874,9 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "job") == 0) {
         cmdJob(trozos, n, ProcessList);
 
+    } else if (strcmp(trozos[COMANDO], "borrarjobs") == 0) {
+        cmdBorrarjobs(trozos, n, ProcessList);
+
     } else {
         cmd_not_found();
     }
