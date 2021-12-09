@@ -560,7 +560,7 @@ void cmdListjobs(int n, tListP *ProcessList) {
 
     for (pos = firstP(*ProcessList); pos != LNULL; pos = nextP(pos, *ProcessList)) {
         item = getItemP(pos, *ProcessList);
-        item = update_status(item);
+        item = update_status(item, 1);
         updateItem(item, pos, ProcessList);
         print_job(item);
     }
@@ -575,54 +575,11 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
         cmdListjobs(1, ProcessList);
     } else if (n == 2) {
         pid = atoi(trozos[1]);
-        if (strcmp(trozos[1], "-fg") == 0 || findPosP(pid, *ProcessList) == LNULL) {
-            cmdListjobs(1, ProcessList);
-        } else {
-            pos = findPosP(pid, *ProcessList);
-            item = getItemP(pos, *ProcessList);
-            print_job(item);
-        }
-    } else if (n == 3) {
-        pid = atoi(trozos[2]);
-        if (strcmp(trozos[1], "-fg") != 0) {
-            invalid_arg();
-            return;
-        }
-
-        pos = findPosP(pid, *ProcessList);
-
-        if (pos != LNULL) {
-            waitpid(pid, NULL, 0);
-            item = getItemP(pos, *ProcessList);
-            update_status(item);
-            updateItem(item, pos, ProcessList);
-
-            if (pos->item.end == 1) {
-                deleteItemP(pos, ProcessList);
-            }
-
-            print_job(item);
-        }
-    } else {
-        invalid_nargs();
-    }
-}
-
-void cmdJob2(char *trozos[], int n, tListP *ProcessList) {
-    int status;
-    pid_t pid;
-    tPosP pos;
-    tItemP item;
-
-    if (n == 1) {
-        cmdListjobs(1, ProcessList);
-    } else if (n == 2) {
-        pid = atoi(trozos[1]);
         if ((pos = findPosP(pid, *ProcessList)) == LNULL) {
             cmdListjobs(1, ProcessList);
         } else {
             item = getItemP(pos, *ProcessList);
-            item = update_status(item);
+            item = update_status(item, 1);
             updateItem(item, pos, ProcessList);
             print_job(item);
         }
@@ -634,28 +591,14 @@ void cmdJob2(char *trozos[], int n, tListP *ProcessList) {
         }
 
         if ((pos = findPosP(pid, *ProcessList)) == LNULL) {
-            printf("Process %d there is not in background processes list\n", pid);
+            printf("Process %d is not in background processes list\n", pid);
             return;
         }
+
         item = getItemP(pos, *ProcessList);
+
         /* el proceso se pasa a foreground */
-        if (waitpid(pid, &status, 0) == pid) {
-            /* el estado del proceso ha cambiado desde la última revisión */
-            if (WIFEXITED(status)) {
-                item.state = EXITED;
-                item.end = WEXITSTATUS(status);
-            } else if (WIFCONTINUED(status)) {
-                item.state = RUNNING;
-            } else if (WIFSTOPPED(status)) {
-                item.state = STOPPED;
-                item.end = WSTOPSIG(status);
-            } else if (WIFSIGNALED(status)) {
-                item.state = KILLED;
-                item.end = WTERMSIG(status);
-            } else {
-                item.state = UNKNOWN;
-            }
-        }
+        item = update_status(item, 0);
         print_end(item);
         free(item.command);
         free(item.time);
@@ -697,7 +640,7 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
         while (pos != NULL) {
             item = getItemP(pos, *ProcessList);
 
-            update_status(item);
+            item = update_status(item, 1);
             updateItem(item, pos, ProcessList);
 
             if (pos->item.end == 2) {
@@ -712,7 +655,7 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
         while (pos != NULL) {
             item = getItemP(pos, *ProcessList);
 
-            update_status(item);
+            item = update_status(item, 1);
             updateItem(item, pos, ProcessList);
 
             if (pos->item.end == 1) {

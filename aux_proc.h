@@ -39,7 +39,7 @@ int BuscarVariable(char *var, char *e[]);
 
 char *check_status(int status);
 
-tItemP update_status(tItemP item);
+tItemP update_status(tItemP item, int options);
 
 void checkoptions_borrar(char *trozos[], int n, bool *opTerm, bool *opSig, bool *opAll, bool *opClear);
 

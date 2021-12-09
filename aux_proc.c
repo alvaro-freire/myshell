@@ -19,12 +19,6 @@
 
 #include "prints.h"
 
-#define NOCHANGE -1
-#define SIGN 1
-#define NORM 2
-#define CONT 3
-#define STOP 4
-
 #define MAXVAR 255
 
 void liberarEnvironment(tListE EnvironmentList) {
@@ -139,10 +133,14 @@ char *check_status(int status) {
     }
 }
 
-tItemP update_status(tItemP item) {
+tItemP update_status(tItemP item, int options) {
     int status;
 
-    if (waitpid(item.pid, &status, WNOHANG | WUNTRACED | WCONTINUED) == item.pid) {
+    if (options != 0) {
+        options = WNOHANG | WUNTRACED | WCONTINUED;
+    }
+
+    if (waitpid(item.pid, &status, options) == item.pid) {
         /* el estado del proceso ha cambiado desde la última revisión */
         if (WIFEXITED(status)) {
             item.state = EXITED;
