@@ -64,6 +64,10 @@ tPosP findPosP(pid_t pid, tListP L) {
     return pos;
 }
 
+void updateItem(tItemP item, tPosP pos, tListP *L) {
+    pos->item = item;
+}
+
 void deleteItemP(tPosP p, tListP *L) {
     if (p == *L) {
         *L = p->next;

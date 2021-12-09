@@ -11,11 +11,22 @@
 #define P3_SO_BG_LIST_H
 
 #include <stdbool.h>
+#include <sys/types.h>
 
 #define LNULL NULL
+#define EXITED 0
+#define RUNNING 1
+#define STOPPED -1
+#define KILLED -2
+#define UNKNOWN -3
 
 typedef struct tItemP {
     pid_t pid;
+    char *user;
+    char *command;
+    char *time;
+    int state;
+    int end;
 } tItemP;
 
 typedef struct tNodeP *tPosP;
@@ -41,6 +52,8 @@ tPosP nextP(tPosP p, tListP L);
 tItemP getItemP(tPosP p, tListP L);
 
 tPosP findPosP(int n, tListP L);
+
+void updateItem(tItemP i, tPosP p, tListP *L);
 
 void deleteItemP(tPosP p, tListP *L);
 
