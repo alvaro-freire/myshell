@@ -108,6 +108,17 @@ void deleteListP(tListP *L) {
     }
 }
 
+void clearListP(tListP *L) {
+    tPosP pos;
+
+    if (!isEmptyListP(*L)) {
+        for (pos = *L; (pos != LNULL); pos = pos->next) {
+            deleteItemP(pos, L);
+        }
+    }
+
+}
+
 bool insertItemP(tItemP i, tListP *L) {
     tPosP node;
 

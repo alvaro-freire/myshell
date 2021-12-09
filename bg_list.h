@@ -61,6 +61,8 @@ void deleteItemP(tPosP p, tListP *L);
 
 void deleteListP(tListP *L);
 
+void clearListP(tListP *L);
+
 bool insertItemP(tItemP i, tListP *L);
 
 #endif //P3_SO_BG_LIST_H
