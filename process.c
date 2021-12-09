@@ -515,7 +515,7 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
         cmdListjobs(1, ProcessList);
     } else if (n == 2) {
         pid = atoi(trozos[1]);
-        if (strcmp(trozos[1], "-fg") == 0 || !findItemP(pid, *ProcessList)) {
+        if (strcmp(trozos[1], "-fg") == 0 || findPosP(pid, *ProcessList) == LNULL) {
             cmdListjobs(1, ProcessList);
         } else {
             pos = findPosP(pid, *ProcessList);
@@ -529,7 +529,7 @@ void cmdJob(char *trozos[], int n, tListP *ProcessList) {
             return;
         }
 
-        if (findItemP(pid, *ProcessList)) {
+        if (findPosP(pid, *ProcessList) != LNULL) {
             waitpid(pid, NULL, 0);
         }
     } else {
