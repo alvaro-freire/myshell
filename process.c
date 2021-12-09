@@ -595,7 +595,7 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
     int nOptions;
     bool opTerm = false, opSig = false, opAll = false, opClear = false;
     tPosP pos;
-    int newstatus;
+    tItemP item;
 
     checkoptions_borrar(trozos, n, &opTerm, &opSig, &opAll, &opClear);
 
@@ -616,13 +616,14 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
         opSig = true;
     }
 
+    pos = *ProcessList;
+
     if (opTerm) {
         while (pos != NULL) {
-            newstatus = check_status(pos->item.pid);
+            item = getItemP(pos, *ProcessList);
 
-            if (newstatus != -1) {
-                pos->item.end = newstatus;
-            }
+            update_status(item);
+            updateItem(item, pos, ProcessList);
 
             if (pos->item.end == 2) {
                 deleteItemP(pos, ProcessList);
@@ -634,11 +635,10 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
 
     if (opSig) {
         while (pos != NULL) {
-            newstatus = check_status(pos->item.pid);
+            item = getItemP(pos, *ProcessList);
 
-            if (newstatus != -1) {
-                pos->item.end = newstatus;
-            }
+            update_status(item);
+            updateItem(item, pos, ProcessList);
 
             if (pos->item.end == 1) {
                 deleteItemP(pos, ProcessList);

@@ -31,7 +31,7 @@ int CambiarUidLogin (char *login);
 
 int BuscarVariable(char *var, char *e[]);
 
-int check_status(int pid);
+char *check_status(int status);
 
 tItemP update_status(tItemP item);
 

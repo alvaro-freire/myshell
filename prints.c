@@ -347,17 +347,16 @@ void print_env_addr(char *env[], char *environ[]) {
 }
 
 void print_job(tItemP item) {
-    char *signal;
-    int status;
+    char *signal, *status;
 
     status = check_status(item.state);
 
     if (item.state == STOPPED || item.state == KILLED) {
         signal = NombreSenal(item.end);
-        printf("%d\t%s p=%d %s %d (%s) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
+        printf("%d\t%s p=%d %s %s (%s) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
                status, signal, item.command);
     } else {
-        printf("%d\t%s p=%d %s %d (%d) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
+        printf("%d\t%s p=%d %s %s (%d) %s\n", item.pid, item.user, getpriority(PRIO_PROCESS, item.pid), item.time,
                status, item.end, item.command);
     }
 }

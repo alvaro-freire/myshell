@@ -123,22 +123,20 @@ void liberarProcessCommand(tListP ProcessList) {
     }
 }
 
-int check_status(int pid) {
-    int status;
-    int npid = waitpid(pid, &status, WNOHANG | WUNTRACED | WCONTINUED);
+char *check_status(int status) {
 
-    if (npid == pid) {
-        if (WIFSIGNALED(status))
-            return SIGN;
-        if (WIFEXITED(status))
-            return NORM;
-        if (WIFCONTINUED(status))
-            return CONT;
-        if (WIFSTOPPED(status))
-            return STOP;
+    switch (status) {
+        case EXITED:
+            return "EXITED";
+        case RUNNING:
+            return "RUNNING";
+        case STOPPED:
+            return "STOPPED";
+        case KILLED:
+            return "KILLED";
+        default:
+            return "UNKNOWN";
     }
-
-    return NOCHANGE;
 }
 
 tItemP update_status(tItemP item) {
