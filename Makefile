@@ -1,7 +1,7 @@
 p3:
-	gcc -Wall *.c -o p3
+	gcc -Wall *.c -o shell
 
 clean:
-	rm p3
+	rm shell
 
 cp3: clean p3
