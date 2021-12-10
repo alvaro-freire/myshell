@@ -21,6 +21,14 @@
 #define KILLED -2
 #define UNKNOWN -3
 
+struct SEN {
+    char *nombre;
+    int senal;
+
+};
+
+char *NombreSenal(int sen);
+
 void liberarEnvironment(tListE EnvironmentList);
 
 void liberarProcessCommand(tListP ProcessList);

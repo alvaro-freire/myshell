@@ -20,7 +20,6 @@
 #include "aux_mem.h"
 #include "aux_proc.h"
 #include "prints.h"
-#include "signals.h"
 
 /**
  * Function: print_error
