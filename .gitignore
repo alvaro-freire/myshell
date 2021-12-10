@@ -12,6 +12,6 @@ prints.o
 aux_file.o
 aux_mem.o
 aux_proc.o
-p3
+shell
 shell3
 log.txt
