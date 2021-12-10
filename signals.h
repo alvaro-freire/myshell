@@ -94,8 +94,6 @@ static struct SEN sigstrnum[] = {
         {NULL, -1},
 };  /*fin array sigstrnum */
 
-int Senal(char *sen);
-
 char *NombreSenal(int sen);
 
 #endif //P3_SO_SIGNALS_H
