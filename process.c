@@ -17,7 +17,6 @@
 #include <sys/wait.h>
 #include <time.h>
 
-#include "file.h"
 #include "process.h"
 #include "prints.h"
 #include "aux_proc.h"
@@ -142,7 +141,7 @@ void cmdPriority(char *trozos[], int n) {
             return;
         }
         pid = getpid();
-        printf("Priority of the current process (pid: %d): %d\n", pid, priority);
+        printf("Priority of the current process (%d): %d\n", pid, priority);
     } else if (n == 2) {
         /* se intenta convertir el argumento del pid a número */
         if ((pid = (pid_t) atoi(trozos[1])) == 0) {
