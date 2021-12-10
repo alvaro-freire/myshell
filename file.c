@@ -751,7 +751,8 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
     } else if (strcmp(trozos[COMANDO], "pid") == 0) {
         cmdPid(trozos[PARAM], n);
 
-    } else if (strcmp(trozos[COMANDO], "carpeta") == 0) {
+    } else if (strcmp(trozos[COMANDO], "carpeta") == 0 ||
+               strcmp(trozos[COMANDO], "cd") == 0) {
         cmdCarpeta(trozos[PARAM], n);
 
     } else if (strcmp(trozos[COMANDO], "fecha") == 0) {
@@ -851,13 +852,13 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdEjecpri(trozos, n);
 
     } else if (strcmp(trozos[COMANDO], "fg") == 0) {
-        cmdFg(trozos, n);
+        cmdFg(trozos, n, 1);
 
     } else if (strcmp(trozos[COMANDO], "fgpri") == 0) {
         cmdFgpri(trozos, n);
 
     } else if (strcmp(trozos[COMANDO], "back") == 0) {
-        cmdBack(trozos, n, ProcessList);
+        cmdBack(trozos, n, ProcessList, 1);
 
     } else if (strcmp(trozos[COMANDO], "backpri") == 0) {
         cmdBackpri(trozos, n, ProcessList);
@@ -881,7 +882,7 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
         cmdBorrarjobs(trozos, n, ProcessList);
 
     } else {
-        cmd_not_found();
+        cmdLinux(trozos, n, ProcessList);
     }
 }
 

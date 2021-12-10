@@ -13,7 +13,7 @@
 #include "bg_list.h"
 #include "env_list.h"
 
-void cmdBack(char *trozos[], int n, tListP *ProcessList);
+void cmdBack(char *trozos[], int n, tListP *ProcessList, int start);
 
 void cmdBackpri(char *trozos[], int n, tListP *ProcessList);
 
@@ -29,13 +29,15 @@ void cmdEjecpri(char *trozos[], int n);
 
 void cmdEntorno(char *trozos[], int n, char *arg3[], char *environ[]);
 
-void cmdFg(char *trozos[], int n);
+void cmdFg(char *trozos[], int n, int start);
 
 void cmdFgas(char *trozos[], int n);
 
 void cmdFgpri(char *trozos[], int n);
 
 void cmdFork(int n);
+
+void cmdLinux(char *trozos[], int n, tListP *ProcessList);
 
 void cmdListjobs(int n, tListP *ProcessList);
 

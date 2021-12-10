@@ -294,10 +294,10 @@ void cmdEjecpri(char *trozos[], int n) {
     }
 }
 
-void cmdFg(char *trozos[], int n) {
+void cmdFg(char *trozos[], int n, int start) {
     pid_t pid;
 
-    if (n == 1) {
+    if (n == 1 && start == 1) {
         invalid_nargs();
     } else {
         if ((pid = fork()) == -1) {
@@ -306,7 +306,7 @@ void cmdFg(char *trozos[], int n) {
         }
         if (pid == 0) {
             /* se ejecuta el programa en el proceso hijo */
-            if (execvp(trozos[1], &trozos[1]) == -1) {
+            if (execvp(trozos[start], &trozos[start]) == -1) {
                 print_error();
                 exit(1);
             }
@@ -344,7 +344,7 @@ void cmdFgpri(char *trozos[], int n) {
     }
 }
 
-void cmdBack(char *trozos[], int n, tListP *ProcessList) {
+void cmdBack(char *trozos[], int n, tListP *ProcessList, int start) {
     int i;
     pid_t pid;
     tItemP item;
@@ -352,7 +352,7 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
     char date[128], *login;
     uid_t uid;
 
-    if (n == 1) {
+    if (n == 1 && start == 1) {
         invalid_nargs();
     } else {
         if ((pid = fork()) == -1) {
@@ -361,7 +361,7 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
         }
         if (pid == 0) {
             /* se ejecuta el programa en el proceso hijo */
-            if (execvp(trozos[1], &trozos[1]) == -1) {
+            if (execvp(trozos[start], &trozos[start]) == -1) {
                 print_error();
                 exit(1);
             }
@@ -386,10 +386,10 @@ void cmdBack(char *trozos[], int n, tListP *ProcessList) {
         strcpy(item.user, login);
 
         /* se reserva la memoria necesaria para guardar el comando */
-        item.command = malloc(strlen(trozos[1]) + 2);
-        strcpy(item.command, trozos[1]);
+        item.command = malloc(strlen(trozos[start]) + 2);
+        strcpy(item.command, trozos[start]);
         strcat(item.command, " ");
-        for (i = 2; i < n; i++) {
+        for (i = start + 1; i < n; i++) {
             item.command = realloc(item.command, strlen(item.command) + strlen(trozos[i]) + 2);
             strcat(item.command, trozos[i]);
             strcat(item.command, " ");
@@ -666,5 +666,15 @@ void cmdBorrarjobs(char *trozos[], int n, tListP *ProcessList) {
                 deleteItemP(pos, ProcessList);
             }
         }
+    }
+}
+
+void cmdLinux(char *trozos[], int n, tListP *ProcessList) {
+
+    if (strcmp(trozos[n - 1], "&") == 0) {
+        trozos[--n] = NULL;
+        cmdBack(trozos, n, ProcessList, 0);
+    } else {
+        cmdFg(trozos, n, 0);
     }
 }
