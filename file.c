@@ -773,7 +773,8 @@ void cmdSwitcher(char *trozos[], int n, bool *exit, tListC *CommandList, int *co
 
     } else if (strcmp(trozos[COMANDO], "fin") == 0 ||
                strcmp(trozos[COMANDO], "salir") == 0 ||
-               strcmp(trozos[COMANDO], "bye") == 0) {
+               strcmp(trozos[COMANDO], "bye") == 0 ||
+               strcmp(trozos[COMANDO], "exit") == 0) {
         cmdExit(n, exit, CommandList, MemoryList, EnvironmentList, ProcessList, std_error);
 
     } else if (strcmp(trozos[COMANDO], "crear") == 0) {
